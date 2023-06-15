@@ -1,6 +1,16 @@
 #include <iostream>
+#include <string>
+using namespace std;
+
+void startup()
+{
+ system("if not exist C:\\logins\\Teachers mkdir C:\\logins\\Teachers");
+}
+
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    
+    startup();
+    cout << "Hello World!\n";
 }
