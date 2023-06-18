@@ -10,7 +10,7 @@ char *Fixer(string InpStr)
 
   return Fixer;
 }
-string Formatter(string input)
+string Formatter(string input)//Formatts strings to replace spaces with underscores
 {
   int Inputlength = input.length();
   char *Formatter = new char[input.length() + 1];
@@ -22,9 +22,8 @@ string Formatter(string input)
       Formatter[i] = char(95);
     }
   }
-  string out;
-  out.assign(Formatter, Formatter + Inputlength);
-  return out;
+  
+  return Formatter;
 }
 void startup() // Checks if the files for the programm exist and if not creates them.
 {
@@ -55,6 +54,7 @@ void makefolder(string input, string directory, string warning) // Make folder i
   string out = Ck + directory + Bs + input + Sp + Ob + C1 + directory + Bs + input + Cb + C2 + Ob + C3 + Qm + warning + Qm + Cb;
   system(Fixer(out));
 }
+
 void AddATeacher() // WIP
 {
   string path = "C:\\logins\\Teachers";            // Path to folder;
@@ -88,8 +88,7 @@ void AddAClass() // WIP
   path = path + Bs + TeacherName + Bs + "Classes"; // Path to folder;
   makefolder(ClassName, path, Warning);            // makes the folder
   string Fullpath = path + Bs + ClassName;
-  string Filename = ClassName + "-" + Classtype;
-  makefile("Test ", Fullpath, Filename); // makes the file
+  makefile("Test ", Fullpath, ClassName); // makes the file
 }
 void AddStudent()
 {
@@ -105,19 +104,24 @@ void AddStudent()
   cout << "The student's class's  name : ";
   getline(cin, ClassName);
   Formatter(ClassName);
-  cout << "The student's class's  name : ";
+  cout << "The student's  name : ";
   getline(cin, StudentName);
   Formatter(StudentName);
   // ↑Inputs ↓File and folder making
   string Fullpath = path + Bs + TeacherName + Bs + "Classes" + Bs + ClassName; // Path to folder;
   makefolder(StudentName, path, Warning);
+  string classname = StudentName; 
+  makefile("",Fullpath,ClassName);
 }
 
 int main()
 {
+
   system("tree /F  C:\\logins");
   startup();
   AddAClass();
+  AddStudent();
   AddATeacher();
+  system("tree /F  C:\\logins");
   cout << "Hello World!\n";
 }
