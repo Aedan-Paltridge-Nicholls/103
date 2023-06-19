@@ -87,6 +87,36 @@ void AddAClass() // WIP
   string Fullpath = path + Bs + ClassName;
   makefile("Test ", Fullpath, ClassName); // Makes The file
 }
+char Gen;// The students Gender.
+string gender()
+{
+  string out = "'s Gender is :";
+  switch (Gen)
+  {   
+   case 'M':
+    {
+      out.append(" Male ♂ ");
+    }
+    break;
+    case 'F':
+    {
+      out.append(" Female ♀ ");
+    }
+    break;
+    case 'O':
+    {
+      out.append(" other ♀/♂ ");
+    }
+    break;
+    default:
+    {
+      out.append(" Male ♂ ");
+    }
+    break;
+  }
+  Gen = ' ';
+ return out;
+}
 void StudentInfoFile(string str1, string str2, string str3, string str4, string str5, string str6, string str7)
 {
   /*
@@ -135,31 +165,7 @@ void StudentInfoFile(string str1, string str2, string str3, string str4, string 
   command = "type " + Path + T9;
   system(Fixer(command));
 }
-char Gen;// The students Gender.
-string gender()
-{
-  string out = "'s Gender is :";
-  switch (Gen)
-  {   
-   case 'M':
-    {
-      out.append(" Male ♂ ");
-    }
-    break;
-    case 'F':
-    {
-      out.append(" Female ♀ ");
-    }
-    break;
-    case 'O':
-    {
-      out.append(" other ♀/♂ ");
-    }
-    break;
-  }
-  Gen = ' ';
- return out;
-}
+
 void AddStudent()
 {
   string path = "C:\\logins\\Teachers";    // The main path.
