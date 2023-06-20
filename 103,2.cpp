@@ -9,6 +9,7 @@ using namespace std;
 #define KEY_LEFT 75
 #define KEY_RIGHT 77
 #define KEY_ENTER 13
+#define cout std::cout
 char *Fixer(string InpStr)
 {
   string Str17 = InpStr;
@@ -72,109 +73,21 @@ void AddATeacher() // WIP
   makefolder(input, path, error);
   system("TREE C:\\logins");
 }
-class draw
+string SetTimetable()
 {
-  char TL = 201; // ╔ Top Left 
-  char TM = 203; // ╦ Top Middle
-  char TR = 187; // ╗ Top Right
-  char LM = 205; // ═ Line Middle
-  char MM = 186; // ║ Middle Middle
-  char LL = 204; // ╠ Line Left
-  char LC = 206; // ╬ Line Center
-  char LR = 185; // ╣ Line Right
-  char BL = 200; // ╚ Bottom Left
-  char BM = 202; // ╩ Bottom Middle
-  char BR = 188; // ╝ Bottom Right
-  char Day[13] = {char(127),'M','o','n','d','a','y',char(127),char(127),char(127),char(127),char(127),char(127)};
-public:
-  
-  void Line();
-  void Topline();
-  void Middleline();
-  void Weekdays();
-  void Bottomline();
-  void Dividerline();
-  void DrawTimetable();
-};
-inline void draw ::Line() { cout << LM << LM << LM << LM << LM << LM << LM << LM << LM << LM << LM << LM << LM; }
-inline void draw ::Topline()
-{
-  cout << TL;
-  Line();
-  cout << TM;
-  Line();
-  cout << TR << endl;
-}
-inline void draw ::Dividerline()
-{
-  cout << LL;
-  Line();
-  cout << LC;
-  Line();
-  cout << LR << endl;
-}
-inline void draw ::Weekdays()
-{
-  for (int i = 0; i < 13; i++)
+  string Weekdays[7] ={"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+  string StartOrEnd[2]={"Start","End"};
+  int input = 0,i=555,x=1,Runs = 1,sre=0,days=0;
+  while (true)
   {
-    cout << noskipws << Day[i];
-  }
-}
-inline void draw ::Middleline()
-{
-  cout << MM;
-  Weekdays();
-  cout << MM;
-  Weekdays();
-  cout << MM << endl;
-}
-inline void draw ::Bottomline()
-{
-  cout << BL;
-  Line();
-  cout << BM;
-  Line();
-  cout << BR << endl;
-}
-inline void draw ::DrawTimetable()
-{
-  Topline();
-  Middleline();
-  Dividerline();
-  Bottomline();
-}
-
-void Timetable()
-{ 
-  char TL = 201; // ╔ Top Left
-  char TM = 203; // ╦ Top Middle
-  char TR = 187; // ╗ Top Right
-  char LM = 205; // ═ Line Middle
-  char LL = 204; // ╠ Line Left
-  char LC = 206; // ╬ Line Center
-  char LR = 185; // ╣ Line Right
-  char BL = 200; // ╚ Bottom Left
-  char BM = 202; // ╩ Bottom Middle
-  char BR = 188; // ╝ Bottom Right
-   
-  // string Top =;
-  // string Divider ="";
-  //  string Middle ="";
-  // string Bottom  ="";
- // cout << TL;
-  draw  s;
-  s.DrawTimetable();
-}
-void SetTimetable()
-{
-  int input = 0,i=0,x=1;
-  while (input != KEY_ENTER)
-  {
+    string out = "NA";
     input = 0;
     system("cls");
-    if (i<10){cout <<"000";}else if (i<100&&i>10){cout <<"00";}else if (i<1000&&i>100){cout <<"0";}
+    if (i<10){cout <<"000";}else if (i<100&&i>10){cout <<"00";}else if (i<1000&&i>100){cout <<"0";} 
+    if (Runs %2 !=0){sre = 1;}else{sre =2; }
     
-    cout <<i<<endl;
+    cout <<i<< " :"<<StartOrEnd[(sre-1)]<<" "<<Weekdays[days]<<" Time change by :"<< x <<endl;
+
     switch ((input=getch()))
     { 
       case KEY_UP:
@@ -189,22 +102,148 @@ void SetTimetable()
       case KEY_RIGHT:
       {x++;}
       break;
-
+      case KEY_ENTER:
+      {//return out;
+     
+      if ( Runs %2 == 0)
+      {
+        days++;
+      } 
+      Runs ++;
+      }
+      break;
       default:
       break;
     }
+    
     if (i<0){i = 2359;}else if (i>2359){i = 0;}
-    
-    
-    
-    
-  
+    if (i<10){out ="000"; out += i;}else if (i<100&&i>10){out ="00"; out += i; }else if (i < 1000 && i > 100){out = "0";out += i;}else{out += i;}
   }
-  
-  
-
+}
+void Timetable()
+{ char SP = 32;  // " " Space
+  char AA = 175; // » Two arrows
+  char BK = 219; // █ Block 
+  char TL = 201; // ╔ Top Left
+  char TM = 203; // ╦ Top Middle
+  char TR = 187; // ╗ Top Right
+  char LM = 205; // ═ Line Middle
+  char MM = 186; // ║ Middle Middle
+  char LL = 204; // ╠ Line Left
+  char LC = 206; // ╬ Line Center
+  char LR = 185; // ╣ Line Right
+  char BL = 200; // ╚ Bottom Left
+  char BM = 202; // ╩ Bottom Middle
+  char BR = 188; // ╝ Bottom Right
+  int left = 13; // Size of the left half
+  int right = 15;// Size of the right half
+  string Hours = "Hours" ;
+  string Days = "Days" ;
+  string CenterTime = "";
+  CenterTime += SP;
+  CenterTime += AA;
+  CenterTime += SP; 
+  string Weekdays[7] ={"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+  string Times[7] = 
+  {"12:00"+CenterTime+"1800","0700"+CenterTime+"1200","0700"+CenterTime+"2000","1200"+CenterTime+"1800","0700"+CenterTime+"1200","0700"+CenterTime+"2000","0700"+CenterTime+"2000" };
+  {
+    for (int i = 0; i < 7; i++)
+    {
+      Times[i] = SetTimetable() + CenterTime + SetTimetable();
+      if (Times[i] == "NA")
+      {
+        for (int x = 0; x < 13; x++)
+        {
+          Times[x] += BK;
+        }
+      }
+    }
+  }
+  string Top,Header,Divider,Content[7],Bottom;
+  Top = TL; // The Top of the timetable
+  {
+    for (int i = 0; i < left; i++)
+    {
+      Top += LM;
+    }
+    Top += TM;
+    for (int i = 0; i < right; i++)
+    {
+      Top += LM;
+    }
+    Top += TR;
+  }
+  Header = MM ; // The header of the timetable
+  {
+    int h,d;
+    d = (left- Days.length())/2;
+    h = (right- Hours.length())/2;
+    Days += SP;
+    for (int i = 0; i < d; i++){Header += char(32);}
+    Header += Days;
+    for (int i = 0; i < d; i++){Header += char(32);}
+    Header += MM ;
+    for (int i = 0; i < h; i++){Header += char(32);}
+    Header += Hours;
+    for (int i = 0; i < h; i++){Header += char(32);}
+    
+   
+    Header += MM ;
+  }
+  Divider = LL;// The divider between each of day of the timetable
+  {
+    for (int i = 0; i < left; i++)
+    {
+      Divider += LM;
+    }
+    Divider += LC;
+    for (int i = 0; i < right; i++)
+    {
+      Divider += LM;
+    }
+    Divider += LR;
+  }
+  Bottom = BL; // The bottom of the timetable
+  {
+    for (int i = 0; i < left; i++)
+    {
+      Bottom += LM;
+    }
+    Bottom += BM;
+    for (int i = 0; i < right; i++)
+    {
+      Bottom += LM;
+    }
+    Bottom += BR;
+  }
+  // The content of the timetable
+  {
+    for (int i = 0; i < 7; i++)
+    {
+      int v = ((left) - (Weekdays[i].length())-1);
+      Content[i] += MM;
+      Content[i] += char(32);
+      Content[i] += Weekdays[i];
+      for (int j = 0; j < v ; j++)
+      {Content[i] += char(32);}
+      Content[i] += MM;
+      Content[i] += char(32);
+      Content[i] += Times[i];
+      Content[i] += char(32);
+      Content[i] += MM;
+    }
+  }
+  cout << Top <<endl;
+  cout << Header <<endl;
+  for (int i = 0; i < 7; i++)
+  {
+    cout << Divider <<endl;
+    cout << Content[i] <<endl;
+  }
+  cout << Bottom <<endl;
 
 }
+
 void ClassInfoFile()
 {
   /*
@@ -215,23 +254,23 @@ void ClassInfoFile()
   * Name of the teacher : "TeacherName" || Start date : "start" || End date : "end"
   * Name of "TeacherName"'s class : "ClassName" ||  "ClassName"'s class Type :
   * "ClassName"'s Time table : 
-  * ╔═══════════╦═══════════╗   //  Class time slots to be displayed like : ↓
-  * ║   Days    ║   Hours   ║   //          start ↓   ↓ end       not on this day ↓ 
-  * ╠═══════════╬═══════════╣   //╠═══════════╬═══════════╣  ╠═══════════╬═══════════╣  
-  * ║ Sunday    ║           ║   //║ Sunday    ║ 0700-1200 ║  ║ Sunday    ║███████████║ 
-  * ╠═══════════╬═══════════╣   //╠═══════════╬═══════════╣  ╠═══════════╬═══════════╣
-  * ║ Monday    ║           ║
-  * ╠═══════════╬═══════════╣  
-  * ║ Tuesday   ║           ║
-  * ╠═══════════╬═══════════╣
-  * ║ Wednesday ║           ║
-  * ╠═══════════╬═══════════╣
-  * ║ Thursday  ║           ║
-  * ╠═══════════╬═══════════╣
-  * ║ Friday    ║           ║
-  * ╠═══════════╬═══════════╣
-  * ║ Saturday  ║           ║
-  * ╚═══════════╩═══════════╝
+  * ╔═══════════╦═════════════╗   //  Class time slots to be displayed like : ↓
+  * ║   Days    ║    Hours    ║   //          start ↓   ↓ end       not on this day ↓ 
+  * ╠═══════════╬═════════════╣   //╠═══════════╬═════════════╣  ╠═══════════╬═════════════╣  
+  * ║ Sunday    ║             ║   //║ Sunday    ║ 0700 » 1200 ║  ║ Sunday    ║█████████████║ 
+  * ╠═══════════╬═════════════╣   //╠═══════════╬═════════════╣  ╠═══════════╬═════════════╣
+  * ║ Monday    ║             ║
+  * ╠═══════════╬═════════════╣  
+  * ║ Tuesday   ║             ║
+  * ╠═══════════╬═════════════╣
+  * ║ Wednesday ║             ║
+  * ╠═══════════╬═════════════╣
+  * ║ Thursday  ║             ║
+  * ╠═══════════╬═════════════╣
+  * ║ Friday    ║             ║
+  * ╠═══════════╬═════════════╣
+  * ║ Saturday  ║             ║
+  * ╚═══════════╩═════════════╝
   * 
   */
 }
@@ -432,9 +471,9 @@ void interface()
 }
 int main()
 {
-  Timetable();
+  SetTimetable();
   cin.ignore();
- SetTimetable();
+ // SetTimetable();
  // StudentInfoFile("Aedan H Paltridge-Nicholls","17","13","6a harley rd","Aaron rodney Nicholls ","64 22 400 3301","C:\\logins\\teachers\\");
   /*string text ;
   cin >> noskipws  >>text ;
