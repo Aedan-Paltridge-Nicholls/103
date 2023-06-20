@@ -1,7 +1,14 @@
-#include <iostream>
+
 #include <string>
+#include <conio.h>
 #include <cstring>
+#include <iostream>
 using namespace std;
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
+#define KEY_ENTER 13
 char *Fixer(string InpStr)
 {
   string Str17 = InpStr;
@@ -27,8 +34,8 @@ string Formatter(string input) // Formatts strings to replace spaces with unders
 }
 void startup() // Checks if The files for The programm exist and if not creates them.
 {
-  system("if not exist C\\logins\\Teachers mkdir C\\logins\\Teachers");
-  system("tree /F  C\\logins");
+  system("if not exist C:\\logins\\Teachers mkdir C:\\logins\\Teachers");
+  system("tree /F  C:\\logins");
 }
 void makefile(string content, string directory, string filename) // Make a text file in  a choosen  directory.
 {
@@ -55,21 +62,186 @@ void makefolder(string input, string directory, string warning) // Make folder i
 }
 void AddATeacher() // WIP
 {
-  string path = "C\\logins\\Teachers";            // Path to folder;
+  cin.ignore();
+  string path = "C:\\logins\\Teachers";            // Path to folder;
   string error = "Inputed teacher already exists"; // Warns if The inputed teacher's name already exists;
   string input = "";
   cout << "Name of Teacher  ";
   getline(cin, input);
   input = Formatter(input);
   makefolder(input, path, error);
-  system("TREE C\\logins");
+  system("TREE C:\\logins");
+}
+class draw
+{
+  char TL = 201; // ╔ Top Left 
+  char TM = 203; // ╦ Top Middle
+  char TR = 187; // ╗ Top Right
+  char LM = 205; // ═ Line Middle
+  char MM = 186; // ║ Middle Middle
+  char LL = 204; // ╠ Line Left
+  char LC = 206; // ╬ Line Center
+  char LR = 185; // ╣ Line Right
+  char BL = 200; // ╚ Bottom Left
+  char BM = 202; // ╩ Bottom Middle
+  char BR = 188; // ╝ Bottom Right
+  char Day[13] = {char(127),'M','o','n','d','a','y',char(127),char(127),char(127),char(127),char(127),char(127)};
+public:
+  
+  void Line();
+  void Topline();
+  void Middleline();
+  void Weekdays();
+  void Bottomline();
+  void Dividerline();
+  void DrawTimetable();
+};
+inline void draw ::Line() { cout << LM << LM << LM << LM << LM << LM << LM << LM << LM << LM << LM << LM << LM; }
+inline void draw ::Topline()
+{
+  cout << TL;
+  Line();
+  cout << TM;
+  Line();
+  cout << TR << endl;
+}
+inline void draw ::Dividerline()
+{
+  cout << LL;
+  Line();
+  cout << LC;
+  Line();
+  cout << LR << endl;
+}
+inline void draw ::Weekdays()
+{
+  for (int i = 0; i < 13; i++)
+  {
+    cout << noskipws << Day[i];
+  }
+}
+inline void draw ::Middleline()
+{
+  cout << MM;
+  Weekdays();
+  cout << MM;
+  Weekdays();
+  cout << MM << endl;
+}
+inline void draw ::Bottomline()
+{
+  cout << BL;
+  Line();
+  cout << BM;
+  Line();
+  cout << BR << endl;
+}
+inline void draw ::DrawTimetable()
+{
+  Topline();
+  Middleline();
+  Dividerline();
+  Bottomline();
+}
+
+void Timetable()
+{ 
+  char TL = 201; // ╔ Top Left
+  char TM = 203; // ╦ Top Middle
+  char TR = 187; // ╗ Top Right
+  char LM = 205; // ═ Line Middle
+  char LL = 204; // ╠ Line Left
+  char LC = 206; // ╬ Line Center
+  char LR = 185; // ╣ Line Right
+  char BL = 200; // ╚ Bottom Left
+  char BM = 202; // ╩ Bottom Middle
+  char BR = 188; // ╝ Bottom Right
+   
+  // string Top =;
+  // string Divider ="";
+  //  string Middle ="";
+  // string Bottom  ="";
+ // cout << TL;
+  draw  s;
+  s.DrawTimetable();
+}
+void SetTimetable()
+{
+  int input = 0,i=0,x=1;
+  while (input != KEY_ENTER)
+  {
+    input = 0;
+    system("cls");
+    if (i<10){cout <<"000";}else if (i<100&&i>10){cout <<"00";}else if (i<1000&&i>100){cout <<"0";}
+    
+    cout <<i<<endl;
+    switch ((input=getch()))
+    { 
+      case KEY_UP:
+      {i=i+x;}
+      break;
+      case KEY_DOWN:
+      {i=i-x;}
+      break;
+      case KEY_LEFT:
+      {x--;}
+      break;
+      case KEY_RIGHT:
+      {x++;}
+      break;
+
+      default:
+      break;
+    }
+    if (i<0){i = 2359;}else if (i>2359){i = 0;}
+    
+    
+    
+    
+  
+  }
+  
+  
+
+
+}
+void ClassInfoFile()
+{
+  /*
+  *  TeacherName = str1   //The teacher's name
+  *  ClassName = str2     //The name of the class
+  *  ClassType = str3     //The class's Type ie Maths, English, History, ect.
+  * 
+  * Name of the teacher : "TeacherName" || Start date : "start" || End date : "end"
+  * Name of "TeacherName"'s class : "ClassName" ||  "ClassName"'s class Type :
+  * "ClassName"'s Time table : 
+  * ╔═══════════╦═══════════╗   //  Class time slots to be displayed like : ↓
+  * ║   Days    ║   Hours   ║   //          start ↓   ↓ end       not on this day ↓ 
+  * ╠═══════════╬═══════════╣   //╠═══════════╬═══════════╣  ╠═══════════╬═══════════╣  
+  * ║ Sunday    ║           ║   //║ Sunday    ║ 0700-1200 ║  ║ Sunday    ║███████████║ 
+  * ╠═══════════╬═══════════╣   //╠═══════════╬═══════════╣  ╠═══════════╬═══════════╣
+  * ║ Monday    ║           ║
+  * ╠═══════════╬═══════════╣  
+  * ║ Tuesday   ║           ║
+  * ╠═══════════╬═══════════╣
+  * ║ Wednesday ║           ║
+  * ╠═══════════╬═══════════╣
+  * ║ Thursday  ║           ║
+  * ╠═══════════╬═══════════╣
+  * ║ Friday    ║           ║
+  * ╠═══════════╬═══════════╣
+  * ║ Saturday  ║           ║
+  * ╚═══════════╩═══════════╝
+  * 
+  */
 }
 void AddAClass() // WIP
 {
+  cin.ignore();
   char Bs = 92;                            // A Back slash
-  string TeacherName;                      // The teachers name
+  string TeacherName;                      // The teacher's name
   string ClassName;                        // The new class's name
-  string Classtype;                        // The new class's Type ie Maths, English, History, ect.
+  string ClassType;                        // The new class's Type ie Maths, English, History, ect.
   string Warning = "Class already exists"; // Warns if The inputed class already exists;
   cout << "The classes teachers name  ";
   getline(cin, TeacherName);
@@ -78,10 +250,10 @@ void AddAClass() // WIP
   getline(cin, ClassName);
   ClassName = Formatter(ClassName);
   cout << "The classes  type  ";
-  getline(cin, Classtype);
-  Classtype = Formatter(Classtype);
+  getline(cin, ClassType);
+  ClassType = Formatter(ClassType);
   // ↑Inputs ↓File and folder making
-  string path = "C\\logins\\Teachers";
+  string path = "C:\\logins\\Teachers";
   path = path + Bs + TeacherName + Bs + "Classes"; // Path to folder;
   makefolder(ClassName, path, Warning);            // Makes The folder
   string Fullpath = path + Bs + ClassName;
@@ -119,55 +291,56 @@ string gender()
 }
 void StudentInfoFile(string str1, string str2, string str3, string str4, string str5, string str6, string str7)
 {
-  /*
-  string StudentName      =   str1                 // The name of The student
-  string StudentDOB       =   str2                 // The Date of birth of The student
-  string Studentparents   =   str3                 // The parents of The student
-  string phonenumber;     =   str4                 // The student's parent's phone number.
-  string Studentaddress;  =   str5                 // The address of The student
-  string Yearlevel;       =   str6                 // The Year level of The student
-  string Path             =   str7                 // The path to The file
-  string gender           =   gender()             // the student's gender. 
-  formatt
-  Name "StudentName"  Age "StudentAge"   Year level "Yearlevel"
-  Gender" " Home Address "Studentaddress"
-  Name of parents "Studentparents"  parents phonenumber "phonenumber"
+  /*This ↓ is the format that will be written to the file.
+  *string StudentName      =   str1                 // The name of The student
+  *string StudentDOB       =   str2                 // The Date of birth of The student
+  *string Studentparents   =   str3                 // The parents of The student
+  *string phonenumber;     =   str4                 // The student's parent's phone number.
+  *string Studentaddress;  =   str5                 // The address of The student
+  *string Yearlevel;       =   str6                 // The Year level of The student
+  *string Path             =   str7                 // The path to The file
+  *string gender           =   gender()             // the student's gender. 
+  *formatt
+  *Name "StudentName"  Age "StudentAge"   Year level "Yearlevel"
+  *Gender" " Home Address "Studentaddress"
+  *Name of parents "Studentparents"  parents phonenumber "phonenumber"
   */
-  char Bs = 92;                         // A Back slash
-  char Ob = 40;                         // A Open bracket.
-  char Cb = 41;                         // A Closed bracket.
-  char Sp = 32;                         // A space.
-  char Qm = 34;                         // A Quotation mark.
-  string gen = gender();                // the student's gender. 
-  string Path = str7 + Formatter(str1); // The path to The file
-  string Tb = "^|  ^|";                 // Adds a tab
-  string SC = "(echo.";                 // Starts The command
-  string EC = ") >";                    // Ends The command
-  string NL = "& echo. & echo";         // adds a new line to a file
-  string L1;                            // line one
-  string L2;                            // line two
-  string L3;                            // line three
-  string T1 = "Name:";
-  string T2 = "'s Date of birth:";
-  string T3 = "'s Year level:";
-  string T4 = "Home address of";
-  string T5 = ": ";
-  string T6 = "Name of";
-  string T7 = "'s : ";
-  string T8 = "'s Parent/s's Phonenumbers:";
-  string T9 = ".txt";
+ char Bs = 92;                              // A Back slash
+ char Ob = 40;                              // A Open bracket.
+ char Cb = 41;                              // A Closed bracket.
+ char Sp = 32;                              // A space.
+ char Qm = 34;                              // A Quotation mark.
+ string gen = gender();                     // the student's gender.
+ string Path = str7 + Formatter(str1);      // The path to The file
+ string Tb = "^|  ^|";                      // Adds a tab
+ string SC = "(echo.";                      // Starts The command
+ string EC = ") >";                         // Ends The command
+ string NL = "& echo. & echo";              // adds a new line to a file
+ string L1;                                 // line one
+ string L2;                                 // line two
+ string L3;                                 // line three
+ string T1 = "Name:";                       // Name
+ string T2 = "'s Date of birth:";           // Dob
+ string T3 = "'s Year level:";              // Year level
+ string T4 = "Home address of";             // Home address
+ string T5 = ": ";                          // Formating :
+ string T6 = "Name of";                     // Name of
+ string T7 = "'s : ";                       // Formating 's
+ string T8 = "'s Parent/s's Phonenumbers:"; // Parent/s's Phonenumbers
+ string T9 = ".txt";                        // File format
 
-  L1 = T1 + Sp + str1 + Sp + Tb + Sp + str1 + T2 + Sp + str2 + Sp + Tb + Sp + str1 + T3 + Sp + str3;
-  L2 = T4 + Sp + str1 + T5 + Sp + str4;
-  L3 = T6 + Sp + str1 + T7 + Sp + str5 + Sp + Tb + Sp + str1 + T8 + Sp + str6;
-  string command = SC + Sp + L1 + Sp + NL + Sp + L2 + Sp + NL + Sp + L3 + Sp + EC + Sp + Path + T9;
-  system(Fixer(command));
-  command = "type " + Path + T9;
-  system(Fixer(command));
+ L1 = T1 + Sp + str1 + Sp + Tb + Sp + str1 + T2 + Sp + str2 + Sp + Tb + Sp + str1 + T3 + Sp + str3;
+ L2 = str1 + gen + Sp + T4 + Sp + str1 + T5 + Sp + str4;
+ L3 = T6 + Sp + str1 + T7 + Sp + str5 + Sp + Tb + Sp + str1 + T8 + Sp + str6;
+ string command = SC + Sp + L1 + Sp + NL + Sp + L2 + Sp + NL + Sp + L3 + Sp + EC + Sp + Path + T9;
+ system(Fixer(command));
+ command = "type " + Path + T9;
+ system(Fixer(command));
 }
 
 void AddStudent()
 {
+  cin.ignore();
   string path = "C:\\logins\\Teachers";    // The main path.
   char Bs = 92;                            // A Back slash.
   string TeacherName;                      // The student's teacher's name.
@@ -225,7 +398,7 @@ void AddStudent()
   string Fullpath = path + Bs + TeacherName + Bs + "Classes" + Bs + ClassName; // Path to folder;
   makefolder(Formatter(StudentName), Fullpath, Warning);
 }
-/*
+
 void interface()
 {
   cout << "What do you want to do\nAddAClass\t[C]\nAddaStudent\t[S]\nAddateacher\t[T]\nExit\t\t[E]\n";
@@ -233,41 +406,45 @@ void interface()
   cin >> input;
   switch (toupper(input))
   {
-    case 'C'
+    case 'C':
     { AddAClass();
-    }
+    } 
     break;
-    case 'S'
+   
+    case 'S':
     { AddStudent();
     }
     break;
-    case 'T'
+    case 'T':
     {  AddATeacher();
     }
     break;
-    case 'E'
+    case 'E':
     {  system("exit");
     }
     break;
-    default
+    default:
     {
       cout <<"Invaild input try again"<<endl;
     }
     break;
   }
-}*/
+}
 int main()
 {
-  StudentInfoFile("Aedan H Paltridge-Nicholls","17","13","6a harley rd","Aaron rodney Nicholls ","64 22 400 3301","C:\\logins\\teachers\\");
-  string text ;
+  Timetable();
+  cin.ignore();
+ SetTimetable();
+ // StudentInfoFile("Aedan H Paltridge-Nicholls","17","13","6a harley rd","Aaron rodney Nicholls ","64 22 400 3301","C:\\logins\\teachers\\");
+  /*string text ;
   cin >> noskipws  >>text ;
-  cout << text;
+  cout << text;*/
   startup();
-  /* while (true)
+   while (true)
   {
-     
+     //cin.ignore();
     interface();
   }
-  */
+  
  
 }
