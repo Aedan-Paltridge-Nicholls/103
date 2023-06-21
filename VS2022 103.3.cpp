@@ -1,25 +1,24 @@
 ﻿// VS2022 103.3.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-
+#include <string.h>
 #include <string>
 #include <conio.h>
 #include <cstring>
 #include <iostream>
-#pragma warning(disable : 4996)
+//#pragma warning(disable : 4996)
 using namespace std;
-#define KEY_UP 72
-#define KEY_DOWN 80
-#define KEY_LEFT 75
-#define KEY_RIGHT 77
-#define KEY_ENTER 13
-#define KEY_BACKSPACE 8
-#define cout std::cout
+constexpr auto KEY_UP = 72;
+constexpr auto KEY_DOWN = 80;
+constexpr auto KEY_LEFT = 75;
+constexpr auto KEY_RIGHT = 77;
+constexpr auto KEY_ENTER = 13;
+constexpr auto KEY_BACKSPACE = 8;
 char* Fixer(string InpStr)
 {
     string Str17 = InpStr;
     char* Fixer = new char[Str17.length() + 1]; // Creates The char* fixer and makes it one longer than str7.
-    strcpy(Fixer, Str17.c_str());               // Makes The char* fixer and makes have The same content as str7.
+    strcpy_s(Fixer, Str17.length()+1, Str17.c_str());// Makes The char* fixer and makes have The same content as str7.
 
     return Fixer;
 }
@@ -29,7 +28,7 @@ string Formatter(string input) // Formatts strings to replace spaces with unders
     char Us = 95;                // An Underscore _
     size_t Inputlength = input.length();
     char* Formatter = new char[input.length() + 1];
-    strcpy(Formatter, input.c_str());
+    strcpy_s(Formatter, input.length() + 1,input.c_str());
     for (int i = 0; i < Inputlength; i++)
     {
         if (Formatter[i] == Sp)
@@ -86,7 +85,7 @@ void SetTimetable()
     bool ChangedTime = false;
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
     string StartOrEnd[2] = { "Start","End" };
-    int input = 0, Time = 555, x = 5, Runs = 1, sre = 1, days = 0, Index = 0, Array[4] = { 0,0,0,0 };
+    int input = 0, Time = 555, x = 5, Runs = 1, sre = 1, days = 0, Index = 0, TimeArray[4] = { 0,0,0,0 };
     int Highlow[14]={0,0,0,0,0,0,0,0,0,0,0,0,0,0}, laststart=0;// These are for checking if "Time", end time is Higher or lower than the Last start time.
     while (true)
     {
@@ -96,6 +95,7 @@ void SetTimetable()
         system("cls");
         if (Runs % 2 != 0) { sre = 1; }
         else { sre = 2; }
+
         if (Runs >= 2)
         {Index = Runs - 2;}
         if (sre == 2)
@@ -110,42 +110,91 @@ void SetTimetable()
         cout << Time << " :" << StartOrEnd[(sre -1)] << " " << Weekdays[days] << " Time change by :" << x << endl;
 
 
-        switch ((input = getch()))
+        switch ((input = _getch()))
         {
             case KEY_UP:// When the Up arrow is pushed increases Time by x
             {
-                Time = Time + x;
-                ChangedTime = true;
+                for (int t = 0; t < 4; t++)
+                {
+                    TimeArray[(3 - t)] = Time % 10;
+                    Time /= 10;
+                }
+                {   int UP = 0;
+                    do
+                    {
+                        TimeArray[3]++;
+                        if (TimeArray[3] > 9)
+                        {
+                            TimeArray[3] = 0;
+                            TimeArray[2]++;
+                            if (TimeArray[2] > 6)
+                            {
+
+                                TimeArray[2] = 0;
+                                TimeArray[1]++;
+                                if (TimeArray[1] > 9 && TimeArray[0] < 2)
+                                {
+                                    TimeArray[1] = 0;
+                                    TimeArray[0]++;
+                                    
+                                }
+                                else if (TimeArray[1] > 4 && TimeArray[0] == 2)
+                                {
+                                    for (int t = 0; t < 4; t++)
+                                    {
+                                        TimeArray[t] = 0;
+                                    }
+                                }
+                                else if (TimeArray[1] > 4 && TimeArray[0] > 2)
+                                {
+                                    for (int t = 0; t < 4; t++)
+                                    {
+                                        TimeArray[t] = 0;
+                                    }
+                                }
+                            }
+                        }
+                        UP++;
+
+                    } while (UP != x);
+                    Time =
+                        (TimeArray[0] * 1000) +
+                        (TimeArray[1] * 100) +
+                        (TimeArray[2] * 10) +
+                        (TimeArray[3] * 1);
+                    ChangedTime = true;
+
+                }
             }
             break;
             case KEY_DOWN:// When the Down arrow is pushed decreases Time by x
             {
                 for (int t = 0; t < 4; t++)
                 {
-                    Array[(3 - t)] = Time % 10;
+                    TimeArray[(3 - t)] = Time % 10;
                     Time /= 10;
                 }
                 {   int Down=0;
                     do
                     {
-                        Array[3]--;
-                        if (Array[3] < 0)
+                        TimeArray[3]--;
+                        if (TimeArray[3] < 0)
                         {
-                            Array[3] = 9;
-                            Array[2]--;
-                            if (Array[2] < 0)
+                            TimeArray[3] = 9;
+                            TimeArray[2]--;
+                            if (TimeArray[2] < 0)
                             {
                                 
-                                Array[2] = 5;
-                                Array[1]--;
-                                if (Array[1] < 0)
+                                TimeArray[2] = 5;
+                                TimeArray[1]--;
+                                if (TimeArray[1] < 0)
                                 {
-                                    Array[1] = 9;
-                                    Array[0]--;
-                                    if (Array[0] < 0)
+                                    TimeArray[1] = 9;
+                                    TimeArray[0]--;
+                                    if (TimeArray[0] < 0)
                                     {
-                                        Array[1] = 4;
-                                        Array[0] = 2;
+                                        TimeArray[1] = 4;
+                                        TimeArray[0] = 2;
                                     }
                                 }
                             }
@@ -158,10 +207,10 @@ void SetTimetable()
                 }
 
                 Time = 
-                    (Array[0] * 1000) +
-                    (Array[1] * 100) +
-                    (Array[2] * 10) +
-                    (Array[3] * 1);
+                    (TimeArray[0] * 1000) +
+                    (TimeArray[1] * 100) +
+                    (TimeArray[2] * 10) +
+                    (TimeArray[3] * 1);
                 ChangedTime = true;
             }
             break;
@@ -226,45 +275,45 @@ void SetTimetable()
         Highlow[(Runs - 1)] = Time;
         for (int t = 0; t < 4; t++)
         {
-            Array[(3 - t)] = Time % 10;
+            TimeArray[(3 - t)] = Time % 10;
             Time /= 10;
         }
-        if (Array[2] > 6 || Array[2] == 6 && Array[3] > 0)
+        if (TimeArray[2] > 6 || TimeArray[2] == 6 && TimeArray[3] > 0)
         {
-            Array[1]++;
-            if (Array[1] < 10)
+            TimeArray[1]++;
+            if (TimeArray[1] < 10)
             {
-                Array[2] = 0;
-                Array[3] = 0;
+                TimeArray[2] = 0;
+                TimeArray[3] = 0;
             }
-            else if (Array[0] <= 2)
+            else if (TimeArray[0] <= 2)
             {
-                Array[0]++;
-                Array[1] = 0;
-                Array[2] = 0;
-                Array[3] = 0;
+                TimeArray[0]++;
+                TimeArray[1] = 0;
+                TimeArray[2] = 0;
+                TimeArray[3] = 0;
             }
         }
-        else if (Array[0] >= 2 && Array[1] >= 4 )
+        else if (TimeArray[0] >= 2 && TimeArray[1] >= 4 )
         {
-            Array[0] = 0;
-            Array[1] = 0;
-            Array[2] = 0;
-            Array[3] = 0;
+            TimeArray[0] = 0;
+            TimeArray[1] = 0;
+            TimeArray[2] = 0;
+            TimeArray[3] = 0;
         }
-        else if (Array[0] < 0 || Array[1] < 0 || Array[2] < 0 || Array[3] < 0)
+        else if (TimeArray[0] < 0 || TimeArray[1] < 0 || TimeArray[2] < 0 || TimeArray[3] < 0)
         {
-            Array[0] = 0;
-            Array[1] = 0;
-            Array[2] = 0;
-            Array[3] = 0;
+            TimeArray[0] = 0;
+            TimeArray[1] = 0;
+            TimeArray[2] = 0;
+            TimeArray[3] = 0;
         }
         {
             Time =
-                (Array[0] * 1000) +
-                (Array[1] * 100) +
-                (Array[2] * 10) +
-                (Array[3] * 1);
+                (TimeArray[0] * 1000) +
+                (TimeArray[1] * 100) +
+                (TimeArray[2] * 10) +
+                (TimeArray[3] * 1);
         };
 
     }
@@ -642,13 +691,15 @@ void interface()
 }
 int main()
 {
+   cout << Fixer("Hello world"); cin.ignore();
     Timetable();
-    cin.ignore();
+   
     // SetTimetable();
     // StudentInfoFile("Aedan H Paltridge-Nicholls","17","13","6a harley rd","Aaron rodney Nicholls ","64 22 400 3301","C:\\logins\\teachers\\");
      /*string text ;
      cin >> noskipws  >>text ;
      cout << text;*/
+
     startup();
     while (true)
     {
