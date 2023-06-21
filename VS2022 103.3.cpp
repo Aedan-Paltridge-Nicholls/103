@@ -86,8 +86,8 @@ void SetTimetable()
     bool ChangedTime = false;
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
     string StartOrEnd[2] = { "Start","End" };
-    int input = 0, Time = 555, x = 1, Runs = 1, sre = 1, days = 0, Index = 0;       
-int Highlow[14]={0,0,0,0,0,0,0,0,0,0,0,0,0,0}, laststart;// These are for checking if "Time", end time is Higher or lower than the Last start time.
+    int input = 0, Time = 555, x = 5, Runs = 1, sre = 1, days = 0, Index = 0, Array[4] = { 0,0,0,0 };
+    int Highlow[14]={0,0,0,0,0,0,0,0,0,0,0,0,0,0}, laststart=0;// These are for checking if "Time", end time is Higher or lower than the Last start time.
     while (true)
     {
  
@@ -104,62 +104,126 @@ int Highlow[14]={0,0,0,0,0,0,0,0,0,0,0,0,0,0}, laststart;// These are for checki
             if (Time < laststart) { Time = Time + laststart; }
         }
         if (Time < 10) { cout << "000"; }
-        else if (Time < 100 && Time>10) { cout << "00"; }
-        else if (Time < 1000 && Time>100) { cout << "0"; }
+        else if (Time < 100 && Time>=10) { cout << "00"; }
+        else if (Time < 1000 && Time>=100) { cout << "0"; }
 
         cout << Time << " :" << StartOrEnd[(sre -1)] << " " << Weekdays[days] << " Time change by :" << x << endl;
 
 
         switch ((input = getch()))
         {
-        case KEY_UP:// When the Up arrow is pushed increases Time by x
-        {
-            Time = Time + x;
-            ChangedTime = true;
-        }
-        break;
-        case KEY_DOWN:// When the Down arrow is pushed decreases Time by x
-        {
-            Time = Time - x;
-            ChangedTime = true;
-        }
-        break;
-        case KEY_LEFT:// When the Left arrow is pushed decreases x by 15 only if x above 0
-        {
-            if (x != 0)
+            case KEY_UP:// When the Up arrow is pushed increases Time by x
             {
-                x = x - 15;
+                Time = Time + x;
+                ChangedTime = true;
             }
-        }
-        break;
-        case KEY_RIGHT:// When the Right arrow is pushed increases x by 15 only if x Below 60
-        {
-            if (x != 60)
-            {
-                x = x + 15;
-            }
-        }
-        break;
-        case KEY_ENTER:
-        {
-            if (Runs % 2 == 0) { days++; }
-            if (days > 7) { return; }
-            if (Time < 10) { out = "000"; out += to_string(Time); }
-            else if (Time < 100 && Time > 10) { out = "00"; out += to_string(Time); }
-            else if (Time < 1000 && Time > 100) { out = "0"; out += to_string(Time); }
-            else { out = to_string(Time); }
-            OutTime[(Runs - 1)] = out;
-            Runs++;
-        }
-        break;
-        default:
             break;
+            case KEY_DOWN:// When the Down arrow is pushed decreases Time by x
+            {
+                for (int t = 0; t < 4; t++)
+                {
+                    Array[(3 - t)] = Time % 10;
+                    Time /= 10;
+                }
+                {   int Down=0;
+                    do
+                    {
+                        Array[3]--;
+                        if (Array[3] < 0)
+                        {
+                            Array[3] = 9;
+                            Array[2]--;
+                            if (Array[2] < 0)
+                            {
+                                
+                                Array[2] = 5;
+                                Array[1]--;
+                                if (Array[1] < 0)
+                                {
+                                    Array[1] = 9;
+                                    Array[0]--;
+                                    if (Array[0] < 0)
+                                    {
+                                        Array[1] = 4;
+                                        Array[0] = 2;
+                                    }
+                                }
+                            }
+                        }
+                        Down++;
+
+                    } while (Down!=x);
+                    
+               
+                }
+
+                Time = 
+                    (Array[0] * 1000) +
+                    (Array[1] * 100) +
+                    (Array[2] * 10) +
+                    (Array[3] * 1);
+                ChangedTime = true;
+            }
+            break;
+            case KEY_LEFT:// When the Left arrow is pushed decreases x by 15 until 15, then decreases x by 5 only if x above 0
+            {
+                if (x == 5)
+                {
+                    x = 5;
+                }
+                else if (x == 10)
+                {
+                    x = 5;
+                }
+                else if (x == 15)
+                {
+                    x = 10;
+                }
+                else
+                {
+                    x = x - 15;
+                }
+            }
+            break;
+            case KEY_RIGHT:// When the Right arrow is pushed increases x by 5 until 15, then increases x by 15 only if x Below 60
+            {
+                if (x < 60)
+                {
+                    if (x==0)
+                    {
+                        x = 5;
+                    }
+                    else if (x==5)
+                    {
+                        x = 10;
+                    }
+                    else if(x==10)
+                    {
+                        x = 15;
+                    }
+                    else
+                    {
+                        x = x + 15;
+                    }
+                }
+            }
+            break;
+            case KEY_ENTER:
+            {
+                if (Runs % 2 == 0) { days++; }
+                if (days > 7) { return; }
+                if (Time < 10) { out = "000"; out += to_string(Time); }
+                else if (Time < 100 && Time >= 10) { out = "00"; out += to_string(Time); }
+                else if (Time < 1000 && Time >= 100) { out = "0"; out += to_string(Time); }
+                else { out = to_string(Time); }
+                OutTime[(Runs - 1)] = out;
+                Runs++;
+            }
+            break;
+            default:
+                break;
         }
-
-
-        Time = -2403;
         Highlow[(Runs - 1)] = Time;
-        int Array[4] = { 0,0,0,0 };
         for (int t = 0; t < 4; t++)
         {
             Array[(3 - t)] = Time % 10;
@@ -180,15 +244,8 @@ int Highlow[14]={0,0,0,0,0,0,0,0,0,0,0,0,0,0}, laststart;// These are for checki
                 Array[2] = 0;
                 Array[3] = 0;
             }
-            else if (Array[0] > 2 && Array[1] > 4 || Array[1] == 4 && Array[2] > 0 || Array[3] > 0)
-            {
-                Array[0] = 0;
-                Array[1] = 0;
-                Array[2] = 0;
-                Array[3] = 0;
-            }
         }
-        else if (Array[0] > 2 && Array[1] > 4 || Array[1] == 4 && Array[2] > 0 || Array[3] > 0)
+        else if (Array[0] >= 2 && Array[1] >= 4 )
         {
             Array[0] = 0;
             Array[1] = 0;
