@@ -86,10 +86,11 @@ void SetTimetable()
     bool ChangedTime = false;
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
     string StartOrEnd[2] = { "Start","End" };
-    int input = 0, Time = 555, x = 1, Runs = 1, sre = 1, days = 0, Index = 0;
+    int input = 0, Time = 555, x = 1, Runs = 1, sre = 1, days = 0, Index = 0;       
+int Highlow[14]={0,0,0,0,0,0,0,0,0,0,0,0,0,0}, laststart;// These are for checking if "Time", end time is Higher or lower than the Last start time.
     while (true)
     {
-        int Highlow[14]={0,0,0,0,0,0,0,0,0,0,0,0,0,0}, laststart;// These are for checking if "Time", end time is Higher or lower than the Last start time.
+ 
         string out = "NA";
         input = 0;
         system("cls");
