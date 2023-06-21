@@ -9,6 +9,7 @@ using namespace std;
 #define KEY_LEFT 75
 #define KEY_RIGHT 77
 #define KEY_ENTER 13
+#define KEY_BACKSPACE 8
 #define cout std::cout
 char *Fixer(string InpStr)
 {
@@ -20,14 +21,16 @@ char *Fixer(string InpStr)
 }
 string Formatter(string input) // Formatts strings to replace spaces with underscores
 {
+  char Sp = 32;                // A space. " "
+  char Us = 95;                // An Underscore _
   int Inputlength = input.length();
   char *Formatter = new char[input.length() + 1];
   strcpy(Formatter, input.c_str());
   for (int i = 0; i < Inputlength; i++)
   {
-    if (Formatter[i] == char(32))
+    if (Formatter[i] == Sp)
     {
-      Formatter[i] = char(95);
+      Formatter[i] = Us;
     }
   }
 
@@ -73,56 +76,129 @@ void AddATeacher() // WIP
   makefolder(input, path, error);
   system("TREE C:\\logins");
 }
-string SetTimetable()
-{
+string OutTime[14]; 
+void SetTimetable()
+{ bool ChangedTime = false;
   string Weekdays[7] ={"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
   string StartOrEnd[2]={"Start","End"};
-  int input = 0,i=555,x=1,Runs = 1,sre=0,days=0;
+  int input = 0,Time=555,x=1,Runs = 1,sre=0,days=0;
   while (true)
   {
+    int Highlow[14],laststart;// These are for checking if "Time", end time is Higher or lower than the Last start time.
     string out = "NA";
     input = 0;
     system("cls");
-    if (i<10){cout <<"000";}else if (i<100&&i>10){cout <<"00";}else if (i<1000&&i>100){cout <<"0";} 
-    if (Runs %2 !=0){sre = 1;}else{sre =2; }
+    if (Runs %2 !=0){sre = 1;}else{sre =2;} 
+    if (sre == 2)
+    {
+     laststart = Highlow[(Runs-2)];
+      if(Time < laststart ){Time = Time + laststart;}
+    }
+    if (Time<10){cout <<"000";}else if (Time<100&&Time>10){cout <<"00";}else if (Time<1000&&Time>100){cout <<"0";} 
     
-    cout <<i<< " :"<<StartOrEnd[(sre-1)]<<" "<<Weekdays[days]<<" Time change by :"<< x <<endl;
-
+    cout <<Time<< " :"<<StartOrEnd[(sre-1)]<<" "<<Weekdays[days]<<" Time change by :"<< x <<endl;
+   
+    
     switch ((input=getch()))
     { 
-      case KEY_UP:
-      {i=i+x;}
+      case KEY_UP:// When the Up arrow is pushed increases Time by x
+      {
+       Time=Time+x;
+       ChangedTime = true;
+      }
       break;
-      case KEY_DOWN:
-      {i=i-x;}
+      case KEY_DOWN:// When the Down arrow is pushed decreases Time by x
+      {
+        Time=Time-x;
+        ChangedTime = true;
+      }
       break;
-      case KEY_LEFT:
-      {x--;}
+      case KEY_LEFT:// When the Left arrow is pushed decreases x by 15 only if x above 0
+      {
+        if(x != 0)
+        {x=x-15;}
+      }
       break;
-      case KEY_RIGHT:
-      {x++;}
+      case KEY_RIGHT:// When the Right arrow is pushed increases x by 15 only if x Below 60
+      {
+        if(x != 60)
+       {x=x+15;}
+      }
       break;
       case KEY_ENTER:
-      {//return out;
-     
-      if ( Runs %2 == 0)
       {
-        days++;
-      } 
-      Runs ++;
+        if (Runs %2 == 0){days++;} 
+        if (days > 7){return;}
+        if (Time<10){out ="000"; out += to_string(Time);}
+        else if (Time < 100 && Time > 10){out ="00"; out += to_string(Time); }
+        else if (Time < 1000 && Time > 100){out = "0";out += to_string(Time);}
+        else{out = to_string(Time);}
+        OutTime[(Runs-1)] = out ;
+        Runs ++;
       }
       break;
       default:
       break;
     }
     
-    if (i<0){i = 2359;}else if (i>2359){i = 0;}
-    if (i<10){out ="000"; out += i;}else if (i<100&&i>10){out ="00"; out += i; }else if (i < 1000 && i > 100){out = "0";out += i;}else{out += i;}
+   
+    Time = -2403; 
+    Highlow[(Runs-1)] = Time;
+    int Array[4] ={0,0,0,0};
+    for (int t = 0; t < 4; t++)
+    {
+      Array[(3-t)] = Time %10;
+      Time /= 10;
+    }
+    if (Array[2]>6||Array[2]==6&&Array[3]>0)
+    {
+      Array[1]++;
+      if (Array[1]<10)
+      {
+        Array[2] = 0;
+        Array[3] = 0;
+      }
+      else if (Array[0]<=2)
+      {
+        Array[0]++;
+        Array[1] = 0;
+        Array[2] = 0;
+        Array[3] = 0;
+      }
+      else if (Array[0] > 2 && Array[1] > 4 || Array[1] == 4 && Array[2] > 0 || Array[3] > 0)
+      {
+        Array[0] = 0;
+        Array[1] = 0;
+        Array[2] = 0;
+        Array[3] = 0;
+      }
+    }
+    else if (Array[0] > 2 && Array[1] > 4 || Array[1] == 4 && Array[2] > 0 || Array[3] > 0)
+    {
+      Array[0] = 0;
+      Array[1] = 0;
+      Array[2] = 0;
+      Array[3] = 0;
+    }
+    else if (Array[0] < 0 || Array[1] < 0 || Array[2] < 0 || Array[3] < 0 )
+    {
+      Array[0] = 0;
+      Array[1] = 0;
+      Array[2] = 0;
+      Array[3] = 0;
+    }
+    Time =
+    (Array[0] * 1000) +
+    (Array[1] * 100) +
+    (Array[2] * 10) +
+    (Array[3] * 1) ;
+    
+   }
   }
 }
 void Timetable()
 { char SP = 32;  // " " Space
-  char AA = 175; // » Two arrows
+  char AA = 175; // » Two arrows 
   char BK = 219; // █ Block 
   char TL = 201; // ╔ Top Left
   char TM = 203; // ╦ Top Middle
@@ -139,17 +215,25 @@ void Timetable()
   int right = 15;// Size of the right half
   string Hours = "Hours" ;
   string Days = "Days" ;
-  string CenterTime = "";
-  CenterTime += SP;
-  CenterTime += AA;
-  CenterTime += SP; 
   string Weekdays[7] ={"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-  string Times[7] = 
-  {"12:00"+CenterTime+"1800","0700"+CenterTime+"1200","0700"+CenterTime+"2000","1200"+CenterTime+"1800","0700"+CenterTime+"1200","0700"+CenterTime+"2000","0700"+CenterTime+"2000" };
+  string InTimes[7];
+  string Times[7];
+  SetTimetable();
+ 
+  int StartClass = 0;
+  int End  = 1;
+ for (int R = 0; R < 7; R++)
+ {  
+   Times[R] = OutTime[StartClass] + SP+AA+SP + OutTime[End];
+   StartClass +=2;
+   End +=2;
+   Times[R] ;//= InTimes[R];
+ }
+ 
   {
     for (int i = 0; i < 7; i++)
     {
-      Times[i] = SetTimetable() + CenterTime + SetTimetable();
+     // Times[i] = SetTimetable() + CenterTime + SetTimetable();
       if (Times[i] == "NA")
       {
         for (int x = 0; x < 13; x++)
@@ -179,13 +263,13 @@ void Timetable()
     d = (left- Days.length())/2;
     h = (right- Hours.length())/2;
     Days += SP;
-    for (int i = 0; i < d; i++){Header += char(32);}
+    for (int i = 0; i < d; i++){Header += SP;}
     Header += Days;
-    for (int i = 0; i < d; i++){Header += char(32);}
+    for (int i = 0; i < d; i++){Header += SP;}
     Header += MM ;
-    for (int i = 0; i < h; i++){Header += char(32);}
+    for (int i = 0; i < h; i++){Header += SP;}
     Header += Hours;
-    for (int i = 0; i < h; i++){Header += char(32);}
+    for (int i = 0; i < h; i++){Header += SP;}
     
    
     Header += MM ;
@@ -222,14 +306,14 @@ void Timetable()
     {
       int v = ((left) - (Weekdays[i].length())-1);
       Content[i] += MM;
-      Content[i] += char(32);
+      Content[i] += SP;
       Content[i] += Weekdays[i];
       for (int j = 0; j < v ; j++)
-      {Content[i] += char(32);}
+      {Content[i] += SP;}
       Content[i] += MM;
-      Content[i] += char(32);
+      Content[i] += SP;
       Content[i] += Times[i];
-      Content[i] += char(32);
+      Content[i] += SP;
       Content[i] += MM;
     }
   }
@@ -471,7 +555,7 @@ void interface()
 }
 int main()
 {
-  SetTimetable();
+  Timetable();
   cin.ignore();
  // SetTimetable();
  // StudentInfoFile("Aedan H Paltridge-Nicholls","17","13","6a harley rd","Aaron rodney Nicholls ","64 22 400 3301","C:\\logins\\teachers\\");
