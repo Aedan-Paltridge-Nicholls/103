@@ -78,7 +78,8 @@ void AddATeacher() // WIP
 }
 string OutTime[14]; 
 void SetTimetable()
-{ bool ChangedTime = false;
+{ 
+    bool ChangedTime = false;
   string Weekdays[7] ={"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
   string StartOrEnd[2]={"Start","End"};
   int input = 0,Time=555,x=1,Runs = 1,sre=0,days=0;
@@ -187,14 +188,16 @@ void SetTimetable()
       Array[2] = 0;
       Array[3] = 0;
     }
-    Time =
-    (Array[0] * 1000) +
-    (Array[1] * 100) +
-    (Array[2] * 10) +
-    (Array[3] * 1) ;
+    {
+        Time =
+            (Array[0] * 1000) +
+            (Array[1] * 100) +
+            (Array[2] * 10) +
+            (Array[3] * 1);
+    };
     
-   }
   }
+  
 }
 void Timetable()
 { char SP = 32;  // " " Space
