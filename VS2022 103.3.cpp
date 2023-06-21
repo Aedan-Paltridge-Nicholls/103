@@ -6,7 +6,7 @@
 #include <conio.h>
 #include <cstring>
 #include <iostream>
-#pragma warning(disable : 4996).
+#pragma warning(disable : 4996)
 using namespace std;
 #define KEY_UP 72
 #define KEY_DOWN 80
@@ -27,7 +27,7 @@ string Formatter(string input) // Formatts strings to replace spaces with unders
 {
     char Sp = 32;                // A space. " "
     char Us = 95;                // An Underscore _
-    int Inputlength = input.length();
+    size_t Inputlength = input.length();
     char* Formatter = new char[input.length() + 1];
     strcpy(Formatter, input.c_str());
     for (int i = 0; i < Inputlength; i++)
@@ -47,8 +47,8 @@ void startup() // Checks if The files for The programm exist and if not creates 
 }
 void makefile(string content, string directory, string filename) // Make a text file in  a choosen  directory.
 {
-    char Bs = 92; // A Back slash
-    char Qm = 34; // A Quotation mark.
+    string Bs = "\\";  // A Back slash
+    char Qm = 34;      // A Quotation mark.
     string command = " echo. ";
     string AA = " >> "; // Two arrows so that, it will add to a file, not overwrite it.
     string out = command + Qm + content + Qm + AA + directory + Bs + filename + ".txt";
@@ -60,12 +60,12 @@ void makefolder(string input, string directory, string warning) // Make folder i
     string C1 = " mkdir ";       // Command Makes directory
     string C2 = " else ";        // Command two
     string C3 = " echo. ";       // Command puts warning text in console.
-    char Bs = 92;                // A Back slash
-    char Ob = 40;                // A Open bracket.
-    char Cb = 41;                // A Closed bracket.
-    char Sp = 32;                // A space.
-    char Qm = 34;                // A Quotation mark.
-    string out = Ck + directory + Bs + input + Sp + Ob + C1 + directory + Bs + input + Cb + C2 + Ob + C3 + Qm + warning + Qm + Cb;
+    string Bs = "\\";            // A Back slash
+    string Ob = "(";             // A Open bracket.
+    string Cb = ")";             // A Closed bracket.
+    unsigned char Sp = 32;       // A space.
+    unsigned char Qm = 34;       // A Quotation mark.
+    string out = Ck + directory + Bs + input += Sp +""+ Ob + C1 + directory + Bs + input + Cb  + C2 + Ob +""+ C3 += Qm +""+ warning += Qm +""+ Cb;
     system(Fixer(out));
 }
 void AddATeacher() // WIP
@@ -86,7 +86,7 @@ void SetTimetable()
     bool ChangedTime = false;
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
     string StartOrEnd[2] = { "Start","End" };
-    int input = 0, Time = 555, x = 1, Runs = 1, sre = 0, days = 0;
+    int input = 0, Time = 555, x = 1, Runs = 1, sre = 1, days = 0, Index = 0;
     while (true)
     {
         int Highlow[14]={0,0,0,0,0,0,0,0,0,0,0,0,0,0}, laststart;// These are for checking if "Time", end time is Higher or lower than the Last start time.
@@ -95,16 +95,18 @@ void SetTimetable()
         system("cls");
         if (Runs % 2 != 0) { sre = 1; }
         else { sre = 2; }
+        if (Runs >= 2)
+        {Index = Runs - 2;}
         if (sre == 2)
         {
-            laststart = Highlow[(Runs - 2)];
+            laststart = Highlow[(Index)];
             if (Time < laststart) { Time = Time + laststart; }
         }
         if (Time < 10) { cout << "000"; }
         else if (Time < 100 && Time>10) { cout << "00"; }
         else if (Time < 1000 && Time>100) { cout << "0"; }
 
-        cout << Time << " :" << StartOrEnd[(sre - 1)] << " " << Weekdays[days] << " Time change by :" << x << endl;
+        cout << Time << " :" << StartOrEnd[(sre -1)] << " " << Weekdays[days] << " Time change by :" << x << endl;
 
 
         switch ((input = getch()))
@@ -212,22 +214,22 @@ void SetTimetable()
 }
 void Timetable()
 {
-    char SP = 32;  // " " Space
-    char AA = 175; // » Two arrows 
-    char BK = 219; // █ Block 
-    char TL = 201; // ╔ Top Left
-    char TM = 203; // ╦ Top Middle
-    char TR = 187; // ╗ Top Right
-    char LM = 205; // ═ Line Middle
-    char MM = 186; // ║ Middle Middle
-    char LL = 204; // ╠ Line Left
-    char LC = 206; // ╬ Line Center
-    char LR = 185; // ╣ Line Right
-    char BL = 200; // ╚ Bottom Left
-    char BM = 202; // ╩ Bottom Middle
-    char BR = 188; // ╝ Bottom Right
-    int left = 13; // Size of the left half
-    int right = 15;// Size of the right half
+    unsigned  char SP = 32;  // " " Space
+    unsigned  char AA = 175; // » Two arrows 
+    unsigned  char BK = 219; // █ Block 
+    unsigned  char TL = 201; // ╔ Top Left
+    unsigned  char TM = 203; // ╦ Top Middle
+    unsigned  char TR = 187; // ╗ Top Right
+    unsigned  char LM = 205; // ═ Line Middle
+    unsigned  char MM = 186; // ║ Middle Middle
+    unsigned  char LL = 204; // ╠ Line Left
+    unsigned  char LC = 206; // ╬ Line Center
+    unsigned  char LR = 185; // ╣ Line Right
+    unsigned  char BL = 200; // ╚ Bottom Left
+    unsigned  char BM = 202; // ╩ Bottom Middle
+    unsigned  char BR = 188; // ╝ Bottom Right
+    int left = 13;           // Size of the left half
+    int right = 15;         // Size of the right half
     string Hours = "Hours";
     string Days = "Days";
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
@@ -239,7 +241,8 @@ void Timetable()
     int End = 1;
     for (int R = 0; R < 7; R++)
     {
-        Times[R] = OutTime[StartClass] + SP + AA + SP + OutTime[End];
+        Times[R] = OutTime[StartClass] += SP += AA += SP;
+        Times[R] += OutTime[End];
         StartClass += 2;
         End += 2;
         Times[R];//= InTimes[R];
@@ -253,7 +256,7 @@ void Timetable()
             {
                 for (int x = 0; x < 13; x++)
                 {
-                    Times[x] += BK;
+                    Times[i] += BK;
                 }
             }
         }
@@ -274,7 +277,7 @@ void Timetable()
     }
     Header = MM; // The header of the timetable
     {
-        int h, d;
+        size_t h, d;
         d = (left - Days.length()) / 2;
         h = (right - Hours.length()) / 2;
         Days += SP;
@@ -319,13 +322,13 @@ void Timetable()
     {
         for (int i = 0; i < 7; i++)
         {
-            int v = ((left)-(Weekdays[i].length()) - 1);
+            size_t v = ((left)-(Weekdays[i].length()) - 1);
             Content[i] += MM;
             Content[i] += SP;
             Content[i] += Weekdays[i];
             for (int j = 0; j < v; j++)
             {
-                Content[i] += SP;
+             Content[i] += SP;
             }
             Content[i] += MM;
             Content[i] += SP;
@@ -378,7 +381,7 @@ void ClassInfoFile()
 void AddAClass() // WIP
 {
     cin.ignore();
-    char Bs = 92;                            // A Back slash
+    unsigned  char Bs = 92;                            // A Back slash
     string TeacherName;                      // The teacher's name
     string ClassName;                        // The new class's name
     string ClassType;                        // The new class's Type ie Maths, English, History, ect.
@@ -394,37 +397,44 @@ void AddAClass() // WIP
     ClassType = Formatter(ClassType);
     // ↑Inputs ↓File and folder making
     string path = "C:\\logins\\Teachers";
-    path = path + Bs + TeacherName + Bs + "Classes"; // Path to folder;
+    path = path += Bs +""+ TeacherName += Bs + "Classes"; // Path to folder;
     makefolder(ClassName, path, Warning);            // Makes The folder
-    string Fullpath = path + Bs + ClassName;
+    string Fullpath = path += Bs +"" + ClassName;
     makefile("Test ", Fullpath, ClassName); // Makes The file
 }
 char Gen;// The students Gender.
 string gender()
 {
+    unsigned  char Male = 11;                  // Male Symbol.    
+    unsigned  char Female = 12;                // Male Symbol. 
+    unsigned  char Fs = 47;                    // A forward slash
     string out = "'s Gender is :";
     switch (Gen)
     {
-    case 'M':
-    {
-        out.append(" Male ♂ ");
-    }
-    break;
-    case 'F':
-    {
-        out.append(" Female ♀ ");
-    }
-    break;
-    case 'O':
-    {
-        out.append(" other ♀/♂ ");
-    }
-    break;
-    default:
-    {
-        out.append(" Male ♂ ");
-    }
-    break;
+        case 'M':
+        {
+            out.append(" Male ");
+            out += Male;
+        }
+        break;
+        case 'F':
+        {
+            out.append(" Female ");
+            out += Female;
+        }
+        break;
+        case 'O':
+        {
+            out.append(" other");
+            out += Female+= Fs += Male;
+        }
+        break;
+        default:
+        {
+            out.append(" Unspecified ");
+       
+        }
+        break;
     }
     Gen = ' ';
     return out;
@@ -445,29 +455,29 @@ void StudentInfoFile(string str1, string str2, string str3, string str4, string 
     *Gender" " Home Address "Studentaddress"
     *Name of parents "Studentparents"  parents phonenumber "phonenumber"
     */
-    char Bs = 92;                              // A Back slash
-    char Ob = 40;                              // A Open bracket.
-    char Cb = 41;                              // A Closed bracket.
-    char Sp = 32;                              // A space.
-    char Qm = 34;                              // A Quotation mark.
-    string gen = gender();                     // the student's gender.
-    string Path = str7 + Formatter(str1);      // The path to The file
-    string Tb = "^|  ^|";                      // Adds a tab
-    string SC = "(echo.";                      // Starts The command
-    string EC = ") >";                         // Ends The command
-    string NL = "& echo. & echo";              // adds a new line to a file
-    string L1;                                 // line one
-    string L2;                                 // line two
-    string L3;                                 // line three
-    string T1 = "Name:";                       // Name
-    string T2 = "'s Date of birth:";           // Dob
-    string T3 = "'s Year level:";              // Year level
-    string T4 = "Home address of";             // Home address
-    string T5 = ": ";                          // Formating :
-    string T6 = "Name of";                     // Name of
-    string T7 = "'s : ";                       // Formating 's
-    string T8 = "'s Parent/s's Phonenumbers:"; // Parent/s's Phonenumbers
-    string T9 = ".txt";                        // File format
+    unsigned  char Bs = 92;                              // A Back slash
+    unsigned  char Ob = 40;                              // A Open bracket.
+    unsigned  char Cb = 41;                              // A Closed bracket.
+    unsigned  char Qm = 34;                              // A Quotation mark.
+    string Sp =  " ";                                    // A space.
+    string gen = gender();                               // the student's gender.
+    string Path = str7 + Formatter(str1);                // The path to The file
+    string Tb = "^|  ^|";                                // Adds a tab
+    string SC = "(echo.";                                // Starts The command
+    string EC = ") >";                                   // Ends The command
+    string NL = "& echo. & echo";                        // adds a new line to a file
+    string L1;                                           // line one
+    string L2;                                           // line two
+    string L3;                                           // line three
+    string T1 = "Name:";                                 // Name
+    string T2 = "'s Date of birth:";                     // Dob
+    string T3 = "'s Year level:";                        // Year level
+    string T4 = "Home address of";                       // Home address
+    string T5 = ": ";                                    // Formating :
+    string T6 = "Name of";                               // Name of
+    string T7 = "'s : ";                                 // Formating 's
+    string T8 = "'s Parent/s's Phonenumbers:";           // Parent/s's Phonenumbers
+    string T9 = ".txt";                                  // File format
 
     L1 = T1 + Sp + str1 + Sp + Tb + Sp + str1 + T2 + Sp + str2 + Sp + Tb + Sp + str1 + T3 + Sp + str3;
     L2 = str1 + gen + Sp + T4 + Sp + str1 + T5 + Sp + str4;
@@ -482,7 +492,9 @@ void AddStudent()
 {
     cin.ignore();
     string path = "C:\\logins\\Teachers";    // The main path.
-    char Bs = 92;                            // A Back slash.
+    unsigned  char Male = 11;                // Male Symbol.    
+    unsigned  char Female = 12;              // Male Symbol.    
+    string Bs = "\\";                        // A Back slash.
     string TeacherName;                      // The student's teacher's name.
     string ClassName;                        // The name of The student's class.
     string StudentName;                      // The name of The student.
@@ -507,7 +519,7 @@ void AddStudent()
     cout << "The student's  name  "; // The name of The student.
     getline(cin, StudentName);
     cout << "The student's  Gender\n" // The name of The student.
-        << "Male ♂ [M]\tFemale ♀ [F]\t other ? [O] ";
+        << "Male "<< Male << " [M]\tFemale "<< Female <<" [F]\t other ? [O] ";
     cin >> Gen;
     Gen = toupper(Gen);
     cout << "The student's  Dob  \n please type in DD-MM-YY Format"; // The Date of birth of The student.
