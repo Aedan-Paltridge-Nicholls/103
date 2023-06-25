@@ -79,7 +79,7 @@ void AddATeacher() // WIP
     makefolder(input, path, error);
     system("TREE C:\\logins");
 }
-string OutTime[14];
+string OutTime[14] = { "0000","0000","0000","0000","0000","0000","0000","0000","0000","0000","0000","0000","0000","0000" };
 void SetTimetable()
 {
     bool ChangedTime = false;
@@ -320,6 +320,7 @@ void SetTimetable()
 }
 void Timetable()
 {
+ 
     unsigned  char SP = 32;  // " " Space
     unsigned  char AA = 175; // » Two arrows 
     unsigned  char BK = 219; // █ Block 
@@ -341,13 +342,13 @@ void Timetable()
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
     string InTimes[7];
     string Times[7];
-    SetTimetable();
+  //  SetTimetable();
 
     int StartClass = 0;
     int End = 1;
     for (int R = 0; R < 7; R++)
     {
-        Times[R] = OutTime[StartClass] += SP += AA += SP;
+        Times[R] = (OutTime[StartClass] += SP, OutTime[StartClass] += AA, OutTime[StartClass] += SP);
         Times[R] += OutTime[End];
         StartClass += 2;
         End += 2;
@@ -514,7 +515,7 @@ string gender()
       string Male;
       Male = (char(11));                  // Male Symbol.    
       string Female;
-      Female = (char(11));                // Male Symbol. 
+      Female = (char(12));                // Male Symbol. 
       char Fs = 47;                    // A forward slash
     string out = "'s Gender is :";
     switch (Gen)
@@ -589,9 +590,9 @@ void StudentInfoFile(string str1, string str2, string str3, string str4, string 
     string T8 = "'s Parent/s's Phonenumbers:";           // Parent/s's Phonenumbers
     string T9 = ".txt";                                  // File format
 
-    L1 = T1 + Sp + str1 + Sp + Tb + Sp + str1 + T2 + Sp + str2 + Sp + Tb + Sp + str1 + T3 + Sp + str3;
+    L1 = T1 + Sp + str1 + Sp + Tb + Sp + str1 + T2 + Sp + str2 + Sp + Tb + Sp + str1 + T3 + Sp + str6;
     L2 = str1 + gen + Sp + T4 + Sp + str1 + T5 + Sp + str4;
-    L3 = T6 + Sp + str1 + T7 + Sp + str5 + Sp + Tb + Sp + str1 + T8 + Sp + str6;
+    L3 = T6 + Sp + str1 + T7 + Sp + str5 + Sp + Tb + Sp + str1 + T8 + Sp + str4;
     string command = SC + Sp + L1 + Sp + NL + Sp + L2 + Sp + NL + Sp + L3 + Sp + EC + Sp + Formatter(Path) +Bs+Formatter(str1) + T9;
     system(Fixer(command));
     command = "type " + Formatter(Path)+Bs+Formatter(str1) + T9;
@@ -696,7 +697,7 @@ void interface()
 int main()
 {
     AddStudent();
-    
+    Timetable();
    
     // SetTimetable();
    //  StudentInfoFile("Aedan H Paltridge-Nicholls","17","13","6a harley rd","Aaron rodney Nicholls ","64 22 400 3301","C:\\logins\\teachers\\");
