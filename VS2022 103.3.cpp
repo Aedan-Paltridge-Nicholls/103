@@ -273,9 +273,9 @@ void SetTimetable()
                 else if (Time < 100 && Time >= 10) { out = "00"; out += to_string(Time); }
                 else if (Time < 1000 && Time >= 100) { out = "0"; out += to_string(Time); }
                 else { out = to_string(Time); }*/
-                for (int n = 0; n < 4)
+                for (int n = 0; n < 4; n++)
                 {  
-                  if(n == 2) { OutTime[(Runs - 1)] += ":" }
+                    if (n == 2) { OutTime[(Runs - 1)] += ":"; }
                   OutTime[(Runs - 1)] = TimeArray[n];
                   Time =
                       (TimeArray[0] * 1000) +
@@ -283,7 +283,7 @@ void SetTimetable()
                       (TimeArray[2] * 10) +
                       (TimeArray[3] * 1);
                   ChangedTime = true;
-                  if (Time == 0){ OutTime[(Runs - 1)] = "NULL" }
+                  if (Time == 0) { OutTime[(Runs - 1)] = "NULL"; }
                 }
                 
                 Runs++;
@@ -374,7 +374,7 @@ void Timetable()
     {
         if (OutTime[StartClass] == "NULL" && OutTime[End] == "NULL")
         {
-            for (int b = 0; b < 15; b++) { Times[R] = Block[b] } continue;
+            for (int b = 0; b < 15; b++) { Times[R] = Block[b]; } continue;
         }
         Times[R] = (OutTime[StartClass] += SP, OutTime[StartClass] += AA, OutTime[StartClass] += SP); //TEST THIS
         Times[R] += OutTime[End];
