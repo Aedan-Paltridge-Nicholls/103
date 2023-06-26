@@ -358,38 +358,44 @@ void Timetable()
     unsigned  char BR = 188; // ╝ Bottom Right
     int left = 13;           // Size of the left half
     int right = 15;          // Size of the right half
+    string Block = to_string(BK);
     string Hours = "Hours";
     string Days = "Days";
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
     string InTimes[7];
     string Times[7];
+
+    string Blocks[15] = {Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,};
    SetTimetable();
 
     int StartClass = 0;
     int End = 1;
-    for (int R = 0; R < 7; R++)
+    for (int R = 0; R < 7; R++) // TODO: TEST
     {
         if (OutTime[StartClass] == "NULL" && OutTime[End] == "NULL")
+        {
+            for (int b = 0; b < 15; b++) { Times[R] = Block[b] } continue;
+        }
         Times[R] = (OutTime[StartClass] += SP, OutTime[StartClass] += AA, OutTime[StartClass] += SP); //TEST THIS
         Times[R] += OutTime[End];
         StartClass += 2;
         End += 2;
        // Times[R];//= InTimes[R];
     }
-
-    {
-        for (int i = 0; i < 7; i++)
-        {
-            // Times[i] = SetTimetable() + CenterTime + SetTimetable();
-            if (Times[i] == "NA")
-            {
-                for (int x = 0; x < 13; x++)
-                {
-                    Times[i] += BK;
-                }
-            }
-        }
-    }
+    // TODO: Remove
+    //{   
+    //    for (int i = 0; i < 7; i++)
+    //    {
+    //        // Times[i] = SetTimetable() + CenterTime + SetTimetable();
+    //        if (Times[i] == "NA")
+    //        {
+    //            for (int x = 0; x < 13; x++)
+    //            {
+    //                Times[i] += BK;
+    //            }
+    //        }
+    //    }
+    //}
     string Top, Header, Divider, Content[7], Bottom;
     Top = TL; // The Top of the timetable
     {
