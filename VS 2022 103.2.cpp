@@ -1,19 +1,25 @@
 ﻿// VS2022 103.3.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+// Project\Properties\Configuration\Properties\C++ Language Standard /std:c++latest 
 
 #include <string.h>
 #include <string>
 #include <conio.h>
 #include <cstring>
 #include <iostream>
-//#pragma warning(disable : 4996)
-using namespace std;
 constexpr auto KEY_UP = 72;
 constexpr auto KEY_DOWN = 80;
 constexpr auto KEY_LEFT = 75;
 constexpr auto KEY_RIGHT = 77;
 constexpr auto KEY_ENTER = 13;
 constexpr auto KEY_BACKSPACE = 8;
+using std::cout;
+using std::string;
+using std::cin;
+using std::endl;
+using std::to_string;
+
+
+
 char* Fixer(string InpStr)
 {
     string Str17 = InpStr;
@@ -36,7 +42,7 @@ string Formatter(string input) // Formatts strings to replace spaces with unders
             Formatter[i] = Us;
         }
     }
-
+    
     return Formatter;
 }
 void startup() // Checks if The files for The programm exist and if not creates them.
@@ -89,213 +95,208 @@ void SetTimetable()
     int Highlow[14] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, laststart = 0;// These are for checking if "Time", end time is Higher or lower than the Last start time.
     while (true)
     {
-        if (Runs >= 2)
-        {
-            Index = Runs - 2;
-        }
-        if (OutTime[(Index)] == "NULL")
-        {
-            OutTime[(Index + 1)] = "NULL";
-            Runs++;
-        }
+        if (days > 6) { break; }
+        if (Runs >= 2){Index = Runs - 2;}
         string out = "NA";
         input = 0;
-        system("cls");
+       // system("cls");
         if (Runs % 2 != 0) { sre = 1; }
         else { sre = 2; }
-
-
         if (sre == 2)
         {
             laststart = Highlow[(Index)];
             if (Time < laststart) { Time = Time + laststart; }
         }
+        if (OutTime[(Index)] == "NULL")
+        {
+            OutTime[(Index + 1 )] = "NULL";
+            Runs++;
+            days++;
+            sre = 1;
+            Time = 730;
+        }
         if (Time < 10) { cout << "000"; }
         else if (Time < 100 && Time >= 10) { cout << "00"; }
         else if (Time < 1000 && Time >= 100) { cout << "0"; }
-
         cout << Time << " :" << StartOrEnd[(sre - 1)] << " " << Weekdays[days] << " Time change by :" << x << endl;
 
 
-        switch ((input = _getch()))
+        switch (input =KEY_ENTER/*(input = _getch())*/)
         {
-        case KEY_UP:// When the Up arrow is pushed increases Time by x
-        {
-            for (int t = 0; t < 4; t++)
+            case KEY_UP:// When the Up arrow is pushed increases Time by x
             {
-                TimeArray[(3 - t)] = Time % 10;
-                Time /= 10;
-            }
-            {   int UP = 0;
-            do
-            {
-                TimeArray[3]++;
-                if (TimeArray[3] > 9)
+                for (int t = 0; t < 4; t++)
                 {
-                    TimeArray[3] = 0;
-                    TimeArray[2]++;
-                    if (TimeArray[2] > 6)
+                    TimeArray[(3 - t)] = Time % 10;
+                    Time /= 10;
+                }
+                {   int UP = 0;
+                do
+                {
+                    TimeArray[3]++;
+                    if (TimeArray[3] > 9)
                     {
-                        TimeArray[2] = 0;
-                        TimeArray[1]++;
-                        if (TimeArray[1] > 9 && TimeArray[0] < 2)
+                        TimeArray[3] = 0;
+                        TimeArray[2]++;
+                        if (TimeArray[2] > 6)
                         {
-                            TimeArray[1] = 0;
-                            TimeArray[0]++;
+                            TimeArray[2] = 0;
+                            TimeArray[1]++;
+                            if (TimeArray[1] > 9 && TimeArray[0] < 2)
+                            {
+                                TimeArray[1] = 0;
+                                TimeArray[0]++;
 
-                        }
-                        else if (TimeArray[1] > 4 && TimeArray[0] == 2)
-                        {
-                            for (int t = 0; t < 4; t++)
-                            {
-                                TimeArray[t] = 0;
                             }
-                        }
-                        else if (TimeArray[1] > 4 && TimeArray[0] > 2)
-                        {
-                            for (int t = 0; t < 4; t++)
+                            else if (TimeArray[1] > 4 && TimeArray[0] == 2)
                             {
-                                TimeArray[t] = 0;
+                                for (int t = 0; t < 4; t++)
+                                {
+                                    TimeArray[t] = 0;
+                                }
+                            }
+                            else if (TimeArray[1] > 4 && TimeArray[0] > 2)
+                            {
+                                for (int t = 0; t < 4; t++)
+                                {
+                                    TimeArray[t] = 0;
+                                }
                             }
                         }
                     }
+                    UP++;
+
+                } while (UP != x);
+                Time =
+                    (TimeArray[0] * 1000) +
+                    (TimeArray[1] * 100) +
+                    (TimeArray[2] * 10) +
+                    (TimeArray[3] * 1);
+                    ChangedTime = true;
+
                 }
-                UP++;
-
-            } while (UP != x);
-            Time =
-                (TimeArray[0] * 1000) +
-                (TimeArray[1] * 100) +
-                (TimeArray[2] * 10) +
-                (TimeArray[3] * 1);
-            ChangedTime = true;
-
             }
-        }
-        break;
-        case KEY_DOWN:// When the Down arrow is pushed decreases Time by x
-        {
-            for (int t = 0; t < 4; t++)
+            break;
+            case KEY_DOWN:// When the Down arrow is pushed decreases Time by x
             {
-                TimeArray[(3 - t)] = Time % 10;
-                Time /= 10;
-            }
-            {   int Down = 0;
-            do
-            {
-                TimeArray[3]--;
-                if (TimeArray[3] < 0)
+                for (int t = 0; t < 4; t++)
                 {
-                    TimeArray[3] = 9;
-                    TimeArray[2]--;
-                    if (TimeArray[2] < 0)
+                    TimeArray[(3 - t)] = Time % 10;
+                    Time /= 10;
+                }
+                {   int Down = 0;
+                do
+                {
+                    TimeArray[3]--;
+                    if (TimeArray[3] < 0)
                     {
-
-                        TimeArray[2] = 5;
-                        TimeArray[1]--;
-                        if (TimeArray[1] < 0)
+                        TimeArray[3] = 9;
+                        TimeArray[2]--;
+                        if (TimeArray[2] < 0)
                         {
-                            TimeArray[1] = 9;
-                            TimeArray[0]--;
-                            if (TimeArray[0] < 0)
+
+                            TimeArray[2] = 5;
+                            TimeArray[1]--;
+                            if (TimeArray[1] < 0)
                             {
-                                TimeArray[1] = 4;
-                                TimeArray[0] = 2;
+                                TimeArray[1] = 9;
+                                TimeArray[0]--;
+                                if (TimeArray[0] < 0)
+                                {
+                                    TimeArray[1] = 4;
+                                    TimeArray[0] = 2;
+                                }
                             }
                         }
                     }
-                }
-                Down++;
+                    Down++;
 
-            } while (Down != x);
+                } while (Down != x);
 
 
-            }
+                }
 
-            Time =
-                (TimeArray[0] * 1000) +
-                (TimeArray[1] * 100) +
-                (TimeArray[2] * 10) +
-                (TimeArray[3] * 1);
-            ChangedTime = true;
-        }
-        break;
-        case KEY_LEFT:// When the Left arrow is pushed decreases x by 15 until 15, then decreases x by 5 only if x above 0
-        {
-            if (x == 5)
-            {
-                x = 5;
-            }
-            else if (x == 10)
-            {
-                x = 5;
-            }
-            else if (x == 15)
-            {
-                x = 10;
-            }
-            else
-            {
-                x = x - 15;
-            }
-        }
-        break;
-        case KEY_RIGHT:// When the Right arrow is pushed increases x by 5 until 15, then increases x by 15 only if x Below 60
-        {
-            if (x < 60)
-            {
-                if (x == 0)
-                {
-                    x = 5;
-                }
-                else if (x == 5)
-                {
-                    x = 10;
-                }
-                else if (x == 10)
-                {
-                    x = 15;
-                }
-                else
-                {
-                    x = x + 15;
-                }
-            }
-        }
-        break;
-        case KEY_ENTER: //TEST THIS
-        {
-            for (int t = 0; t < 4; t++)
-            {
-                TimeArray[(3 - t)] = Time % 10;
-                Time /= 10;
-            }
-            if (Runs % 2 == 0) { days++; }
-            if (days > 7) { return; }
-            /* if (Time < 10) { out = "000"; out += to_string(Time); }
-             else if (Time < 100 && Time >= 10) { out = "00"; out += to_string(Time); }
-             else if (Time < 1000 && Time >= 100) { out = "0"; out += to_string(Time); }
-             else { out = to_string(Time); }*/
-            for (int n = 0; n < 4; n++)
-            {
-                if (n == 2) { OutTime[(Runs - 1)] += ":"; }
-                OutTime[(Runs - 1)] = TimeArray[n];
                 Time =
                     (TimeArray[0] * 1000) +
                     (TimeArray[1] * 100) +
                     (TimeArray[2] * 10) +
                     (TimeArray[3] * 1);
                 ChangedTime = true;
-                if (Time == 0) { OutTime[(Runs - 1)] = "NULL"; }
             }
-
-            Runs++;
-        }
-        break;
-        default:
             break;
+            case KEY_LEFT:// When the Left arrow is pushed decreases x by 15 until 15, then decreases x by 5 only if x above 0
+            {
+                if (x == 5)
+                {
+                    x = 5;
+                }
+                else if (x == 10)
+                {
+                    x = 5;
+                }
+                else if (x == 15)
+                {
+                    x = 10;
+                }
+                else
+                {
+                    x = x - 15;
+                }
+            }
+            break;
+            case KEY_RIGHT:// When the Right arrow is pushed increases x by 5 until 15, then increases x by 15 only if x Below 60
+            {
+                if (x < 60)
+                {
+                    if (x == 0)
+                    {
+                        x = 5;
+                    }
+                    else if (x == 5)
+                    {
+                        x = 10;
+                    }
+                    else if (x == 10)
+                    {
+                        x = 15;
+                    }
+                    else
+                    {
+                        x = x + 15;
+                    }
+                }
+            }
+            break;
+            case KEY_ENTER: //TEST THIS
+            { 
+               
+                for (int t = 0; t < 4; t++)
+                {
+                    TimeArray[(3 - t)] = Time % 10;
+                    Time /= 10;
+                }
+                if (Runs % 2 == 0) { days++; }
+                if (days == 6) { return; }
+                Time =
+                (TimeArray[0] * 1000) +
+                (TimeArray[1] * 100) +
+                (TimeArray[2] * 10) +
+                (TimeArray[3] * 1);
+                for (int n = 0; n < 4; n++)
+                {
+                    if (Time == 0 || ChangedTime == false) { OutTime[(Runs - 1)] = "NULL"; break; }
+                    if (n == 2) { OutTime[(Runs - 1)] += ":"; }
+                    OutTime[(Runs - 1)] = TimeArray[n];
+                    
+                }
+                Highlow[Runs-1] = Time;
+                Runs++;
+            }
+            break;
+            default:
+                break;
         }
-        Highlow[(Runs - 1)] = Time;
+       
         for (int t = 0; t < 4; t++)
         {
             TimeArray[(3 - t)] = Time % 10;
@@ -331,158 +332,190 @@ void SetTimetable()
             TimeArray[2] = 0;
             TimeArray[3] = 0;
         }
-        {
-            Time =
-                (TimeArray[0] * 1000) +
-                (TimeArray[1] * 100) +
-                (TimeArray[2] * 10) +
-                (TimeArray[3] * 1);
-        };
+        
+        Time =
+        (TimeArray[0] * 1000) +
+        (TimeArray[1] * 100) +
+        (TimeArray[2] * 10) +
+        (TimeArray[3] * 1);
+        
 
     }
 
 }
+struct Draw
+{
+    unsigned  char SPc = 32;  // " " Space char
+    string SP;
+    unsigned  char AAc = 175; // » Two arrows char
+    string AA; 
+    unsigned  char BKc = 219; // █ Block char
+    string BK;
+    unsigned  char TLc = 201; // ╔ Top Left char
+    string TL; 
+    unsigned  char TMc = 203; // ╦ Top Middle char
+    string TM;
+    unsigned  char TRc = 187; // ╗ Top Right char
+    string TR;
+    unsigned  char LMc = 205; // ═ Line Middle char
+    string LM;
+    unsigned  char MMc = 186; // ║ Middle Middle char
+    string MM;
+    unsigned  char LLc = 204; // ╠ Line Left char
+    string LL;
+    unsigned  char LCc = 206; // ╬ Line Center char
+    string LC; 
+    unsigned  char LRc = 185; // ╣ Line Right char
+    string LR; 
+    unsigned  char BLc = 200; // ╚ Bottom Left char
+    string BL;
+    unsigned  char BMc = 202; // ╩ Bottom Middle char
+    string BM; 
+    unsigned  char BRc = 188; // ╝ Bottom Right char
+    string BR;
+}d;
+struct Drawing
+{
+    string SP = (d.SP += d.SPc); //! " " Space
+    string AA = (d.AA += d.AAc); //! » Two arrows 
+    string BK = (d.BK += d.BKc); //! █ Block
+    string TL = (d.TL += d.TLc); //! ╔ Top Left 
+    string TM = (d.TM += d.TMc);//! ╦ Top Middle 
+    string TR = (d.TR += d.TRc);//! ╗ Top Right 
+    string LM = (d.LM += d.LMc); //! ═ Line Middle 
+    string MM = (d.MM += d.MMc);//! ║ Middle Middle 
+    string LL = (d.LL += d.LLc); //! ╠ Line Left 
+    string LC = (d.LC += d.LCc);//! ╬ Line Center 
+    string LR = (d.LR += d.LRc);//! ╣ Line Right 
+    string BL = (d.BL += d.BLc);//! ╚ Bottom Left 
+    string BM = (d.BM += d.BMc);//! ╩ Bottom Middle 
+    string BR = (d.BR += d.BRc);//! ╝ Bottom Right
+};
 void Timetable()
 {
-
-    unsigned  char SP = 32;  // " " Space
-    unsigned  char AA = 175; // » Two arrows 
-    unsigned  char BK = 219; // █ Block 
-    unsigned  char TL = 201; // ╔ Top Left
-    unsigned  char TM = 203; // ╦ Top Middle
-    unsigned  char TR = 187; // ╗ Top Right
-    unsigned  char LM = 205; // ═ Line Middle
-    unsigned  char MM = 186; // ║ Middle Middle
-    unsigned  char LL = 204; // ╠ Line Left
-    unsigned  char LC = 206; // ╬ Line Center
-    unsigned  char LR = 185; // ╣ Line Right
-    unsigned  char BL = 200; // ╚ Bottom Left
-    unsigned  char BM = 202; // ╩ Bottom Middle
-    unsigned  char BR = 188; // ╝ Bottom Right
+    
+    Drawing D;
+    unsigned  char BKc = 219;
     int left = 13;           // Size of the left half
     int right = 15;          // Size of the right half
-    string Block = to_string(BK);
+    string Block; Block += BKc;
     string Hours = "Hours";
     string Days = "Days";
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
     string InTimes[7];
     string Times[7];
-
+    cout << Block;
     string Blocks[15] = { Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block, };
     SetTimetable();
-
+     system("cls");
     int StartClass = 0;
-    int End = 1;
+    int EndClass = 1;
     for (int R = 0; R < 7; R++) // TODO: TEST
     {
-        if (OutTime[StartClass] == "NULL" && OutTime[End] == "NULL")
+        if (OutTime[StartClass] == "NULL" && OutTime[EndClass] == "NULL")
         {
-            for (int b = 0; b < 15; b++) { Times[R] = Block[b]; } continue;
+            for (int b = 0; b < 15; b++) { Times[R] += Blocks[b]; }
+            continue;
         }
-        Times[R] = (OutTime[StartClass] += SP, OutTime[StartClass] += AA, OutTime[StartClass] += SP); //TEST THIS
-        Times[R] += OutTime[End];
-        StartClass += 2;
-        End += 2;
-        // Times[R];//= InTimes[R];
+        Times[R] = (OutTime[StartClass].append(D.SP), OutTime[StartClass].append(D.AA), OutTime[StartClass].append(D.SP)); //TEST THIS
+        Times[R].append(OutTime[EndClass]);
+        StartClass = StartClass + 2;
+        EndClass = EndClass + 2;
     }
-    // TODO: Remove
-    //{   
-    //    for (int i = 0; i < 7; i++)
-    //    {
-    //        // Times[i] = SetTimetable() + CenterTime + SetTimetable();
-    //        if (Times[i] == "NA")
-    //        {
-    //            for (int x = 0; x < 13; x++)
-    //            {
-    //                Times[i] += BK;
-    //            }
-    //        }
-    //    }
-    //}
-    string Top, Header, Divider, Content[7], Bottom;
-    Top = TL; // The Top of the timetable
+ 
+    string Top ="", Header="", Divider="", Content[7], Bottom="";
+    Top.append(D.TL); // The Top of the timetable
     {
         for (int i = 0; i < left; i++)
         {
-            Top += LM;
+            Top.append(D.LM);
         }
-        Top += TM;
+        Top.append(D.TM);
         for (int i = 0; i < right; i++)
         {
-            Top += LM;
+            Top.append(D.LM);
         }
-        Top += TR;
+        Top.append(D.TR);
     }
-    Header = MM; // The header of the timetable
+    Header.append(D.MM); // The header of the timetable
     {
         size_t h, d;
         d = (left - Days.length()) / 2;
         h = (right - Hours.length()) / 2;
-        Days += SP;
-        for (int i = 0; i < d; i++) { Header += SP; }
-        Header += Days;
-        for (int i = 0; i < d; i++) { Header += SP; }
-        Header += MM;
-        for (int i = 0; i < h; i++) { Header += SP; }
-        Header += Hours;
-        for (int i = 0; i < h; i++) { Header += SP; }
+        Days.append(D.SP);
+        for (int i = 0; i < d; i++) { Header.append(D.SP); }
+        Header.append(Days);
+        for (int i = 0; i < d; i++) { Header.append(D.SP); }
+        Header.append(D.MM);
+        for (int i = 0; i < h; i++) { Header.append(D.SP); }
+        Header.append(Hours);
+        for (int i = 0; i < h; i++) { Header.append(D.SP); }
 
 
-        Header += MM;
+        Header.append(D.MM);
     }
-    Divider = LL;// The divider between each of day of the timetable
+    Divider.append(D.LL);// The divider between each of day of the timetable
     {
         for (int i = 0; i < left; i++)
         {
-            Divider += LM;
+            Divider.append(D.LM);
         }
-        Divider += LC;
+        Divider.append(D.LC);
         for (int i = 0; i < right; i++)
         {
-            Divider += LM;
+            Divider.append(D.LM);
         }
-        Divider += LR;
+        Divider.append(D.LR);
     }
-    Bottom = BL; // The bottom of the timetable
+    Bottom.append(D.BL); // The bottom of the timetable
     {
         for (int i = 0; i < left; i++)
         {
-            Bottom += LM;
+            Bottom.append(D.LM);
         }
-        Bottom += BM;
+        Bottom.append(D.BM);
         for (int i = 0; i < right; i++)
         {
-            Bottom += LM;
+            Bottom.append(D.LM);
         }
-        Bottom += BR;
+        Bottom.append(D.BR);
     }
     // The content of the timetable
     {
         for (int i = 0; i < 7; i++)
         {
             size_t v = ((left)-(Weekdays[i].length()) - 1);
-            Content[i] += MM;
-            Content[i] += SP;
-            Content[i] += Weekdays[i];
+            Content[i].append(D.MM);
+            Content[i].append(D.SP);
+            Content[i].append(Weekdays[i]);
             for (int j = 0; j < v; j++)
             {
-                Content[i] += SP;
+                Content[i].append(D.SP);
             }
-            Content[i] += MM;
-            Content[i] += SP;
-            Content[i] += Times[i];
-            Content[i] += SP;
-            Content[i] += MM;
+            if (Times[i].contains(Block))
+            {
+                Content[i].append(D.MM);
+                Content[i].append(Times[i]);
+                Content[i].append(D.MM);
+            }
+            else
+            {
+                Content[i].append(D.MM);
+                Content[i].append(D.SP);
+                Content[i].append(Times[i]);
+                Content[i].append(D.SP);
+                Content[i].append(D.MM);
+            }
         }
     }
-    cout << Top << endl;
-    cout << Header << endl;
+    std::cout << Top << endl;
+    std::cout << Header << endl;
     for (int i = 0; i < 7; i++)
     {
-        cout << Divider << endl;
-        cout << Content[i] << endl;
+        std::cout << Divider << endl;
+        std::cout << Content[i] << endl;
     }
-    cout << Bottom << endl;
+    std::cout << Bottom << endl;
 
 }
 
@@ -551,31 +584,31 @@ string gender()
     string out = "'s Gender is :";
     switch (Gen)
     {
-    case 'M':
-    {
-        out.append(" Male ");
-        out += Male;
-    }
-    break;
-    case 'F':
-    {
-        out.append(" Female ");
-        out += Female;
-    }
-    break;
-    case 'O':
-    {
-        out.append(" other");
-        out + Female;//+= Fs += Male;
-    }
-    break;
-    default:
-    {
-        out.append(" Unspecified ");
-        out + Female += Male;
+        case 'M':
+        {
+            out.append(" Male ");
+            out += Male;
+        }
+        break;
+        case 'F':
+        {
+            out.append(" Female ");
+            out += Female;
+        }
+        break;
+        case 'O':
+        {
+            out.append(" other");
+            out += Female;//+= Fs += Male;
+        }
+        break;
+        default:
+        {
+            out.append(" Unspecified ");
+            out += Female += Male;
 
-    }
-    break;
+        }
+        break;
     }
     Gen = ' ';
     return out;
@@ -651,7 +684,7 @@ void AddStudent()
     string Yearlevel = " 15";                        // The Year level of The student.
     string Warning = "Student already exists"; // Warns if The inputed class already exists.
     // Other info.↓
-    /*cout << "The student's teacher's name  "; // The students teacher's name.
+    cout << "The student's teacher's name  "; // The students teacher's name.
     getline(cin, TeacherName);
     TeacherName = Formatter(TeacherName);
     cout << "The student's class's  name  "; // The name of The student's class.
@@ -681,7 +714,7 @@ void AddStudent()
     cout << "The student's  address  "; // The address of The student
     getline(cin, Studentaddress);
     cout << "The student's  Year level  "; // The Year level of The student
-    getline(cin, Yearlevel);*/
+    getline(cin, Yearlevel);
     if (StudentFather != "NA") { StudentParents = StudentParents + "Father's name : " + StudentFather; }
     if (StudentMother != "NA") { StudentParents = StudentParents + "Mother's name : " + StudentMother; }
     if (StudentFather == "NA" && StudentMother == "NA") { StudentParents = " Unknown "; }
@@ -727,7 +760,7 @@ void interface()
 }
 int main()
 {
-    AddStudent();
+    //AddStudent();
     Timetable();
 
     // SetTimetable();
