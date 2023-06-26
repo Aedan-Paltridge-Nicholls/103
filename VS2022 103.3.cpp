@@ -79,7 +79,7 @@ void AddATeacher() // WIP
     makefolder(input, path, error);
     system("TREE C:\\logins");
 }
-string OutTime[14] = { "0000","0000","0000","0000","0000","0000","0000","0000","0000","0000","0000","0000","0000","0000" };
+string OutTime[14] = { "00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00" };
 void SetTimetable()
 {
     bool ChangedTime = false;
@@ -89,7 +89,11 @@ void SetTimetable()
     int Highlow[14]={0,0,0,0,0,0,0,0,0,0,0,0,0,0}, laststart=0;// These are for checking if "Time", end time is Higher or lower than the Last start time.
     while (true)
     {
- 
+         if (OutTime[(Runs - 2)] == "NULL")
+         {
+             OutTime[(Runs - 1)] = "NULL";
+             Runs++;
+         }
         string out = "NA";
         input = 0;
         system("cls");
@@ -256,15 +260,32 @@ void SetTimetable()
                 }
             }
             break;
-            case KEY_ENTER:
+            case KEY_ENTER: //TEST THIS
             {
+                for (int t = 0; t < 4; t++)
+                {
+                    TimeArray[(3 - t)] = Time % 10;
+                    Time /= 10;
+                }
                 if (Runs % 2 == 0) { days++; }
                 if (days > 7) { return; }
-                if (Time < 10) { out = "000"; out += to_string(Time); }
+               /* if (Time < 10) { out = "000"; out += to_string(Time); }
                 else if (Time < 100 && Time >= 10) { out = "00"; out += to_string(Time); }
                 else if (Time < 1000 && Time >= 100) { out = "0"; out += to_string(Time); }
-                else { out = to_string(Time); }
-                OutTime[(Runs - 1)] = out;
+                else { out = to_string(Time); }*/
+                for (int n = 0; n < 4)
+                {  
+                  if(n == 2) { OutTime[(Runs - 1)] += ":" }
+                  OutTime[(Runs - 1)] = TimeArray[n];
+                  Time =
+                      (TimeArray[0] * 1000) +
+                      (TimeArray[1] * 100) +
+                      (TimeArray[2] * 10) +
+                      (TimeArray[3] * 1);
+                  ChangedTime = true;
+                  if (Time == 0){ OutTime[(Runs - 1)] = "NULL" }
+                }
+                
                 Runs++;
             }
             break;
@@ -342,13 +363,14 @@ void Timetable()
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
     string InTimes[7];
     string Times[7];
-  //  SetTimetable();
+   SetTimetable();
 
     int StartClass = 0;
     int End = 1;
     for (int R = 0; R < 7; R++)
     {
-        Times[R] = (OutTime[StartClass] += SP, OutTime[StartClass] += AA, OutTime[StartClass] += SP);
+        if (OutTime[StartClass] == "NULL" && OutTime[End] == "NULL")
+        Times[R] = (OutTime[StartClass] += SP, OutTime[StartClass] += AA, OutTime[StartClass] += SP); //TEST THIS
         Times[R] += OutTime[End];
         StartClass += 2;
         End += 2;
@@ -467,9 +489,9 @@ void ClassInfoFile()
     * "ClassName"'s Time table :
     * ╔═══════════╦═════════════╗   //  Class time slots to be displayed like : ↓
     * ║   Days    ║    Hours    ║   //          start ↓   ↓ end       not on this day ↓
-    * ╠═══════════╬═════════════╣   //╠═══════════╬═════════════╣  ╠═══════════╬═════════════╣
-    * ║ Sunday    ║             ║   //║ Sunday    ║ 0700 » 1200 ║  ║ Sunday    ║█████████████║
-    * ╠═══════════╬═════════════╣   //╠═══════════╬═════════════╣  ╠═══════════╬═════════════╣
+    * ╠═══════════╬═════════════╣   //╠═══════════╬═══════════════╣  ╠═══════════╬═══════════════╣
+    * ║ Sunday    ║             ║   //║ Sunday    ║ 07:00 » 12:00 ║  ║ Sunday    ║███████████████║
+    * ╠═══════════╬═════════════╣   //╠═══════════╬═══════════════╣  ╠═══════════╬═══════════════╣
     * ║ Monday    ║             ║
     * ╠═══════════╬═════════════╣
     * ║ Tuesday   ║             ║
