@@ -17,6 +17,7 @@ using std::string;
 using std::cin;
 using std::endl;
 using std::to_string;
+using std::getline;
 
 
 
@@ -28,14 +29,14 @@ char* Fixer(string InpStr)
 
     return Fixer;
 }
-string Formatter(string input) // Formatts strings to replace spaces with underscores
+string Formatter(string input) // Formats strings to replace spaces with underscores
 {
     char Sp = 32;                // A space. " "
     char Us = 95;                // An Underscore _
     size_t Inputlength = input.length();
     char* Formatter = new char[input.length() + 1];
     strcpy_s(Formatter, input.length() + 1, input.c_str());
-    for (int i = 0; i < Inputlength; i++)
+    for (size_t i = 0; i < input.length(); i++)
     {
         if (Formatter[i] == Sp)
         {
@@ -45,7 +46,7 @@ string Formatter(string input) // Formatts strings to replace spaces with unders
     
     return Formatter;
 }
-void startup() // Checks if The files for The programm exist and if not creates them.
+void startup() // Checks if The files for The program exist and if not creates them.
 {
     system("if not exist C:\\logins\\Teachers mkdir C:\\logins\\Teachers");
     system("tree /F  C:\\logins");
@@ -77,7 +78,7 @@ void AddATeacher() // WIP
 {
     cin.ignore();
     string path = "C:\\logins\\Teachers";            // Path to folder;
-    string error = "Inputed teacher already exists"; // Warns if The inputed teacher's name already exists;
+    string error = "Inputted teacher already exists"; // Warns if The inputted teacher's name already exists;
     string input = "";
     cout << "Name of Teacher  ";
     getline(cin, input);
@@ -88,40 +89,41 @@ void AddATeacher() // WIP
 string OutTime[14] = { "00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00" };
 void SetTimetable()
 {
+
     bool ChangedTime = false;
+ 
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
     string StartOrEnd[2] = { "Start","End" };
     int input = 0, Time = 555, x = 5, Runs = 1, sre = 1, days = 0, Index = 0, TimeArray[4] = { 0,0,0,0 };
     int Highlow[14] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, laststart = 0;// These are for checking if "Time", end time is Higher or lower than the Last start time.
     while (true)
     {
-        if (days > 6) { break; }
+        
         if (Runs >= 2){Index = Runs - 2;}
         string out = "NA";
         input = 0;
-       // system("cls");
+        system("cls");
         if (Runs % 2 != 0) { sre = 1; }
         else { sre = 2; }
         if (sre == 2)
         {
+            ChangedTime = false;
             laststart = Highlow[(Index)];
             if (Time < laststart) { Time = Time + laststart; }
         }
-        if (OutTime[(Index)] == "NULL")
-        {
-            OutTime[(Index + 1 )] = "NULL";
-            Runs++;
-            days++;
-            sre = 1;
-            Time = 730;
-        }
+        
+
+        if (days > 6) { break; } 
+        cout << "Press Up arrow key  or Down arrow key to increase or decrease the time." << endl;
+        cout << "Press Left arrow key  or Right arrow key to decrease or increase the increment." << endl;
+        cout << "Set time to 0000 or don't change the time to skip a day; " << endl;
         if (Time < 10) { cout << "000"; }
         else if (Time < 100 && Time >= 10) { cout << "00"; }
         else if (Time < 1000 && Time >= 100) { cout << "0"; }
         cout << Time << " :" << StartOrEnd[(sre - 1)] << " " << Weekdays[days] << " Time change by :" << x << endl;
 
 
-        switch (input =KEY_ENTER/*(input = _getch())*/)
+        switch ((input = _getch()))
         {
             case KEY_UP:// When the Up arrow is pushed increases Time by x
             {
@@ -267,7 +269,7 @@ void SetTimetable()
                 }
             }
             break;
-            case KEY_ENTER: //TEST THIS
+            case KEY_ENTER: 
             { 
                
                 for (int t = 0; t < 4; t++)
@@ -276,21 +278,34 @@ void SetTimetable()
                     Time /= 10;
                 }
                 if (Runs % 2 == 0) { days++; }
-                if (days == 6) { return; }
+               
                 Time =
                 (TimeArray[0] * 1000) +
                 (TimeArray[1] * 100) +
                 (TimeArray[2] * 10) +
-                (TimeArray[3] * 1);
+                (TimeArray[3] * 1); 
+                if (Time == 0 || ChangedTime == false) 
+                {
+                    Highlow[Runs - 1] = Time;
+                    OutTime[(Runs - 1)] = "NULL"; 
+                    days++; 
+                    OutTime[Runs] = "NULL";
+                    Runs += 2;
+                    sre = 1;
+                    Time = 730;
+                    break;
+                }
+                out ="";
                 for (int n = 0; n < 4; n++)
                 {
-                    if (Time == 0 || ChangedTime == false) { OutTime[(Runs - 1)] = "NULL"; break; }
-                    if (n == 2) { OutTime[(Runs - 1)] += ":"; }
-                    OutTime[(Runs - 1)] = TimeArray[n];
-                    
+                    if (n == 2) { out += ":"; }
+                    out += (to_string(TimeArray[n]));
+                   
                 }
-                Highlow[Runs-1] = Time;
+                OutTime[(Runs - 1)] = out;
+                 
                 Runs++;
+                ChangedTime = false;
             }
             break;
             default:
@@ -375,22 +390,24 @@ struct Draw
     string BR;
 }d;
 struct Drawing
-{
-    string SP = (d.SP += d.SPc); //! " " Space
-    string AA = (d.AA += d.AAc); //! » Two arrows 
-    string BK = (d.BK += d.BKc); //! █ Block
-    string TL = (d.TL += d.TLc); //! ╔ Top Left 
-    string TM = (d.TM += d.TMc);//! ╦ Top Middle 
-    string TR = (d.TR += d.TRc);//! ╗ Top Right 
-    string LM = (d.LM += d.LMc); //! ═ Line Middle 
-    string MM = (d.MM += d.MMc);//! ║ Middle Middle 
-    string LL = (d.LL += d.LLc); //! ╠ Line Left 
-    string LC = (d.LC += d.LCc);//! ╬ Line Center 
-    string LR = (d.LR += d.LRc);//! ╣ Line Right 
-    string BL = (d.BL += d.BLc);//! ╚ Bottom Left 
-    string BM = (d.BM += d.BMc);//! ╩ Bottom Middle 
-    string BR = (d.BR += d.BRc);//! ╝ Bottom Right
+{   string NL = " & echo. & echo ";//! "& echo. & echo"
+    string Tb = "^|  ^|";          // Adds a tab
+    string SP = (d.SP += d.SPc);   //! " " Space
+    string AA = (d.AA += d.AAc);   //! » Two arrows 
+    string BK = (d.BK += d.BKc);   //! █ Block
+    string TL = (d.TL += d.TLc);   //! ╔ Top Left 
+    string TM = (d.TM += d.TMc);   //! ╦ Top Middle 
+    string TR = (d.TR += d.TRc);   //! ╗ Top Right 
+    string LM = (d.LM += d.LMc);   //! ═ Line Middle 
+    string MM = (d.MM += d.MMc);   //! ║ Middle Middle 
+    string LL = (d.LL += d.LLc);   //! ╠ Line Left 
+    string LC = (d.LC += d.LCc);   //! ╬ Line Center 
+    string LR = (d.LR += d.LRc);   //! ╣ Line Right 
+    string BL = (d.BL += d.BLc);   //! ╚ Bottom Left 
+    string BM = (d.BM += d.BMc);   //! ╩ Bottom Middle 
+    string BR = (d.BR += d.BRc);   //! ╝ Bottom Right
 };
+string timetableout[17] = { "","","","","","","","","","","","","","","","",""};
 void Timetable()
 {
     
@@ -398,16 +415,16 @@ void Timetable()
     unsigned  char BKc = 219;
     int left = 13;           // Size of the left half
     int right = 15;          // Size of the right half
-    string Block; Block += BKc;
+    string Block =""; Block += BKc;
     string Hours = "Hours";
     string Days = "Days";
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
-    string InTimes[7];
-    string Times[7];
+    string InTimes[7] = { "","","","","","","" };
+    string Times[7] = { "","","","","","","" };
     cout << Block;
     string Blocks[15] = { Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block, };
     SetTimetable();
-     system("cls");
+    system("cls");
     int StartClass = 0;
     int EndClass = 1;
     for (int R = 0; R < 7; R++) // TODO: TEST
@@ -443,13 +460,13 @@ void Timetable()
         d = (left - Days.length()) / 2;
         h = (right - Hours.length()) / 2;
         Days.append(D.SP);
-        for (int i = 0; i < d; i++) { Header.append(D.SP); }
+        for (size_t i = 0; i < d; i++) { Header.append(D.SP); }
         Header.append(Days);
-        for (int i = 0; i < d; i++) { Header.append(D.SP); }
+        for (size_t i = 0; i < d; i++) { Header.append(D.SP); }
         Header.append(D.MM);
-        for (int i = 0; i < h; i++) { Header.append(D.SP); }
+        for (size_t i = 0; i < h; i++) { Header.append(D.SP); }
         Header.append(Hours);
-        for (int i = 0; i < h; i++) { Header.append(D.SP); }
+        for (size_t i = 0; i < h; i++) { Header.append(D.SP); }
 
 
         Header.append(D.MM);
@@ -488,11 +505,11 @@ void Timetable()
             Content[i].append(D.MM);
             Content[i].append(D.SP);
             Content[i].append(Weekdays[i]);
-            for (int j = 0; j < v; j++)
+            for (size_t j = 0; j < v; j++)
             {
                 Content[i].append(D.SP);
             }
-            if (Times[i].contains(Block))
+            if (Times[i].find(Block) != string::npos )
             {
                 Content[i].append(D.MM);
                 Content[i].append(Times[i]);
@@ -508,70 +525,118 @@ void Timetable()
             }
         }
     }
-    std::cout << Top << endl;
-    std::cout << Header << endl;
+    cout << Top << endl;
+    cout << Header << endl;
     for (int i = 0; i < 7; i++)
     {
-        std::cout << Divider << endl;
-        std::cout << Content[i] << endl;
+        cout << Divider << endl;
+        cout << Content[i] << endl;
     }
-    std::cout << Bottom << endl;
-
+    cout << Bottom << endl;
+    
+    timetableout[0] = (Top.append(D.NL));
+    timetableout[1] = (Header.append(D.NL));
+    for (int i = 1; i < 7; i += 2)
+    { 
+        int loops = i;
+        timetableout[loops - 1] = (Divider.append(D.NL));
+        timetableout[loops] = (Content[i].append(D.NL));
+    }
+    timetableout[17] = (Bottom.append(D.NL));
 }
-
-void ClassInfoFile()
-{
     /*
-    *  TeacherName = str1   //The teacher's name
-    *  ClassName = str2     //The name of the class
-    *  ClassType = str3     //The class's Type ie Maths, English, History, ect.
-    *
-    * Name of the teacher : "TeacherName" || Start date : "start" || End date : "end"
-    * Name of "TeacherName"'s class : "ClassName" ||  "ClassName"'s class Type :
-    * "ClassName"'s Time table :
-    * ╔═══════════╦═════════════╗   //  Class time slots to be displayed like : ↓
-    * ║   Days    ║    Hours    ║   //          start ↓   ↓ end       not on this day ↓
-    * ╠═══════════╬═════════════╣   //╠═══════════╬═══════════════╣  ╠═══════════╬═══════════════╣
-    * ║ Sunday    ║             ║   //║ Sunday    ║ 07:00 » 12:00 ║  ║ Sunday    ║███████████████║
-    * ╠═══════════╬═════════════╣   //╠═══════════╬═══════════════╣  ╠═══════════╬═══════════════╣
-    * ║ Monday    ║             ║
-    * ╠═══════════╬═════════════╣
-    * ║ Tuesday   ║             ║
-    * ╠═══════════╬═════════════╣
-    * ║ Wednesday ║             ║
-    * ╠═══════════╬═════════════╣
-    * ║ Thursday  ║             ║
-    * ╠═══════════╬═════════════╣
-    * ║ Friday    ║             ║
-    * ╠═══════════╬═════════════╣
-    * ║ Saturday  ║             ║
-    * ╚═══════════╩═════════════╝
+    * TeacherName = str1   //The teacher's name
+    *  ClassName = str2     // The name of the class
+    *  ClassType = str3     // The class's Type ie Maths, English, History, ect.
+    *  startdate = str4     // The new class's  start date
+    *  Enddate = str5       // The new class's  end date
+    *  path = str6  
+    * Name of the teacher : "TeacherName" |  | Start date : "start" |  | End date : "end"
+    * Name of "TeacherName"'s class : "ClassName" |  |  "ClassName"'s class Type : "ClassType"
+    * TeacherName"'s "ClassName"'s Time table :
+    */
+    /*╔═══════════╦═══════════════╗   //  Class time slots to be displayed like : ↓
+    * ║   Days    ║     Hours     ║   //            start ↓   ↓ end       not on this day ↓
+    * ╠═══════════╬═══════════════╣   //╠═══════════╬═══════════════╣  ╠═══════════╬═══════════════╣
+    * ║ Sunday    ║               ║   //║ Sunday    ║ 07:00 » 12:00 ║  ║ Sunday    ║███████████████║
+    * ╠═══════════╬═══════════════╣   //╠═══════════╬═══════════════╣  ╠═══════════╬═══════════════╣
+    * ║ Monday    ║               ║
+    * ╠═══════════╬═══════════════╣
+    * ║ Tuesday   ║               ║
+    * ╠═══════════╬═══════════════╣
+    * ║ Wednesday ║               ║
+    * ╠═══════════╬═══════════════╣
+    * ║ Thursday  ║               ║
+    * ╠═══════════╬═══════════════╣
+    * ║ Friday    ║               ║
+    * ╠═══════════╬═══════════════╣
+    * ║ Saturday  ║               ║
+    * ╚═══════════╩═══════════════╝
     *
     */
+void ClassInfoFile(string str1, string str2, string str3, string str4, string str5, string str6 )
+{   
+    char Bs = 92;                                                        // A Back slash
+    unsigned  char Ob = 40;                                              // A Open bracket.
+    unsigned  char Cb = 41;                                              // A Closed bracket.
+    unsigned  char Qm = 34;                                              // A Quotation mark.
+    string NL = " & echo. & echo ";                                                   // "& echo. & echo"
+    string Sp = " ";                                                                  // A space.
+    string Path = str6 + Bs + Formatter(str1) + Bs + "Classes" + Bs + Formatter(str2);// The path to The file
+    string Name = Formatter(str1) + "_" + Formatter(str2);               // The Name of The file
+    string Tb = " ^|  ^| ";                                              // Adds a tab
+    string SC = "(echo.";                                                // Starts The command
+    string EC = ") >";                                                   // Ends The command
+    string L1;                                                           // line one
+    string L2;                                                           // line two
+    string L3;                                                           // line three
+    string L4;                                                           // line three
+    string T1 = " Teacher's Name : ";                                    // TeacherName
+    string T2 = " Start date : ";                                        // Start date
+    string T3 = " End date  : ";                                         // End date
+    string T4 = "'s class Type :";                                       // class Type
+    string T5 = "'s class :  ";                                          // Formatting 
+    string T6 = "Name of";                                               // Name of
+    string T7 = " :";                                                    // Formatting :
+    string T8 = "'s Time table :";                                       // Time table
+    string T9 = " 's ";                                                  // Formatting 's
+    string FF = ".txt";                                                  // File format
+    L1 = T1 + str1 + Tb + T2 + str4 + Tb + T3 + str5 + NL;
+    L2 = T6 + str1 + T5 + str2 + Tb + str2 + T4 + str3 + NL;
+    L3 = str1 + T9 + str2 + T8 + NL;
+    for (int i = 0; i < 17; i++){L4.append(timetableout[i]);}
+    string command = SC + L1 + L2 + L3 + L4 + EC + Path + Bs + Name + FF;
+    system(Fixer(command));
 }
 void AddAClass() // WIP
 {
+   
     cin.ignore();
     char Bs = 92;                            // A Back slash
     string TeacherName;                      // The teacher's name
     string ClassName;                        // The new class's name
     string ClassType;                        // The new class's Type ie Maths, English, History, ect.
-    string Warning = "Class already exists"; // Warns if The inputed class already exists;
-    cout << "The classes teachers name  ";
+    string startdate;                        // The new class's  start date
+    string Enddate;                          // The new class's  end date
+    string Warning = "Class already exists"; // Warns if The inputted class already exists;
+    cout << "The classes teachers name : ";
     getline(cin, TeacherName);
     TeacherName = Formatter(TeacherName);
-    cout << "The classes  name  ";
+    cout << "The classes  name :  ";
     getline(cin, ClassName);
     ClassName = Formatter(ClassName);
-    cout << "The classes  type  ";
+    cout << "The classes  type : ";
     getline(cin, ClassType);
+    cout << "The class's  start date  \n please type in DD-MM-YY Format : "; // The Date of birth of The student.
+    getline(cin, startdate);
+    cout << "The class's  end date  \n please type in DD-MM-YY Format : "; // The Date of birth of The student.
+    getline(cin, startdate);
+    Timetable();
     ClassType = Formatter(ClassType);
     // ↑Inputs ↓File and folder making
     string path = "C:\\logins\\Teachers";
-    path = path + Bs + TeacherName + Bs + "Classes"; // Path to folder;
-    makefolder(ClassName, path, Warning);            // Makes The folder
-    string Fullpath = path + Bs + ClassName;
-    makefile("Test ", Fullpath, ClassName); // Makes The file
+    makefolder(ClassName, (path += (Bs + Formatter(TeacherName))), Warning);            // Makes The folder
+    ClassInfoFile(TeacherName, ClassName, ClassName, startdate, Enddate, path);         // Makes The file
 }
 char Gen;// The students Gender.
 string gender()
@@ -622,7 +687,7 @@ string gender()
  *string Yearlevel;       =   str6                 // The Year level of The student
  *string Path             =   str7                 // The path to The file
  *string gender           =   gender()             // the student's gender.
- *formatt
+ *format
  *Name "StudentName"  Age "StudentAge"   Year level "Yearlevel"
  *Gender" " Home Address "Studentaddress"
  *Name of parents "Studentparents"  parents phonenumber "phonenumber"
@@ -648,9 +713,9 @@ void StudentInfoFile(string str1, string str2, string str3, string str4, string 
     string T2 = "'s Date of birth:";                     // Dob
     string T3 = "'s Year level:";                        // Year level
     string T4 = "Home address of";                       // Home address
-    string T5 = ": ";                                    // Formating :
+    string T5 = ": ";                                    // Formatting :
     string T6 = "Name of";                               // Name of
-    string T7 = "'s : ";                                 // Formating 's
+    string T7 = "'s : ";                                 // Formatting 's
     string T8 = "'s Parent/s's Phonenumbers:";           // Parent/s's Phonenumbers
     string T9 = ".txt";                                  // File format
 
@@ -665,7 +730,8 @@ void StudentInfoFile(string str1, string str2, string str3, string str4, string 
 
 void AddStudent()
 {
-    // cin.ignore();
+   
+    cin.ignore();
     string path = "C:\\logins\\Teachers";    // The main path.
     unsigned  char Male = 11;                // Male Symbol.    
     unsigned  char Female = 12;              // Male Symbol.    
@@ -682,7 +748,7 @@ void AddStudent()
     string FatherPhonenumber = "022 0747 5555";                // The student's parent's phone number.
     string Studentaddress = " 1 city rd";                   // The address of The student.
     string Yearlevel = " 15";                        // The Year level of The student.
-    string Warning = "Student already exists"; // Warns if The inputed class already exists.
+    string Warning = "Student already exists"; // Warns if The inputted class already exists.
     // Other info.↓
     cout << "The student's teacher's name  "; // The students teacher's name.
     getline(cin, TeacherName);
@@ -729,7 +795,7 @@ void AddStudent()
 
 void interface()
 {
-    cout << "What do you want to do\nAddAClass\t[C]\nAddaStudent\t[S]\nAddateacher\t[T]\nExit\t\t[E]\n";
+    cout << "What do you want to do\nAdd A Class\t[C]\nAdd a Student\t[S]\nAdd a teacher\t[T]\nExit\t\t[E]\n";
     char input;
     cin >> input;
     switch (toupper(input))
@@ -753,7 +819,7 @@ void interface()
     break;
     default:
     {
-        cout << "Invaild input try again" << endl;
+        cout << "Invalid input try again" << endl;
     }
     break;
     }
@@ -761,13 +827,7 @@ void interface()
 int main()
 {
     //AddStudent();
-    Timetable();
-
-    // SetTimetable();
-   //  StudentInfoFile("Aedan H Paltridge-Nicholls","17","13","6a harley rd","Aaron rodney Nicholls ","64 22 400 3301","C:\\logins\\teachers\\");
-     /*string text ;
-     cin >> noskipws  >>text ;
-     cout << text;*/
+   // Timetable();
 
     startup();
     while (true)
