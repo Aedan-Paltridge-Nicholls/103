@@ -413,6 +413,7 @@ struct Drawing
 }D;
 
 string timetableout[17] = { "","","","","","","","","","","","","","","","",""};
+string outclasspath;
 void Timetable()
 {
     
@@ -550,20 +551,21 @@ void Timetable()
    
         int day = 0;
 
-        void convert(string);
-    convert(Top);
-    convert(Header);
+        void convert(string,string);
+        string path = "C:\\logins\\Teachers";
+    convert(Top, path);
+    convert(Header, path);
     for (int i = 3; i < 17; i += 2)
     { 
         int loops = i;
-        convert(Divider);
-        convert(Content[day]);
+        convert(Divider, path);
+        convert(Content[day], path);
         day++;
     }
-    convert(Bottom);
+    convert(Bottom, path);
     
 }
-void convert(string in)
+void convert(string in,string filepath)
 {
         std::u8string  output;
         output = u8"";
@@ -659,8 +661,10 @@ void convert(string in)
         
     }
         std::u8string u8str = output;
-        u8str += u8"0a";
-        std::ofstream out("output.txt", std::ios_base::app);
+        u8str += u8"\n";
+
+
+        std::ofstream out(outclasspath, std::ios_base::app);// todo: needs fixed 
         out << std::string_view(reinterpret_cast<const char*>(u8str.data()), u8str.size());
         out.close();
     delete[] working;
@@ -697,21 +701,21 @@ void convert(string in)
     */
 void ClassInfoFile(string str1, string str2, string str3, string str4, string str5, string str6 )
 {   
-    char Bs = 92;                                                        // A Back slash
+    string Bs = "\\";                                                        // A Back slash
     unsigned  char Ob = 40;                                              // A Open bracket.
     unsigned  char Cb = 41;                                              // A Closed bracket.
     unsigned  char Qm = 34;                                              // A Quotation mark.
     string NL = " & echo. & echo ";                                                   // "& echo. & echo"
     string Sp = " ";                                                                  // A space.
     string Path = str6 + Bs + Formatter(str1) + Bs + "Classes" + Bs + Formatter(str2);// The path to The file
-    string Name = Formatter(str1) + "_" + Formatter(str2);               // The Name of The file
+    outclasspath = Path + "\\info.txt";
+    string Name = Formatter(str1) + "_" + Formatter(str2) + "\\info.txt";               // The Name of The file
     string Tb = " ^|  ^| ";                                              // Adds a tab
     string SC = "(echo.";                                                // Starts The command
     string EC = ") >";                                                   // Ends The command
     string L1;                                                           // line one
     string L2;                                                           // line two
     string L3;                                                           // line three
-    string L4;                                                           // line three
     string T1 = " Teacher's Name : ";                                    // TeacherName
     string T2 = " Start date : ";                                        // Start date
     string T3 = " End date  : ";                                         // End date
@@ -725,10 +729,8 @@ void ClassInfoFile(string str1, string str2, string str3, string str4, string st
     L1 = T1 + str1 + Tb + T2 + str4 + Tb + T3 + str5 + NL;
     L2 = T6 + str1 + T5 + str2 + Tb + str2 + T4 + str3 + NL;
     L3 = str1 + T9 + str2 + T8 + NL;
-    for (int i = 0; i < 17; i++){L4.append(timetableout[i]);}
-    string command = SC + L1 + L2 + L3 + L4 + EC + Path + Bs + Name + FF;
-
-    system("doskey /HISTORY > C:\\Users\\nicho\\OneDrive - techtorium.ac.nz\\Desktop\\log.txt");
+ 
+    string command = SC + L1 + L2 + L3 + EC + Path + Bs + Name + FF;
     system(Fixer(command));
     command = "";
 }
@@ -755,12 +757,14 @@ void AddAClass() // WIP
     getline(cin, startdate);
     cout << "The class's  end date  \n please type in DD-MM-YY Format : "; // The Date of birth of The student.
     getline(cin, Enddate);
-    Timetable();
+    
     ClassType = Formatter(ClassType);
     // ↑Inputs ↓File and folder making
     string path = "C:\\logins\\Teachers";
-    makefolder(ClassName, (path += (Bs + Formatter(TeacherName)+"Classes")), Warning);            // Makes The folder
-    ClassInfoFile(TeacherName, ClassName, ClassName, startdate, Enddate, path);         // Makes The file
+    makefolder(ClassName, (path += (Bs + Formatter(TeacherName)+"Classes")), Warning); 
+    path = "C:\\logins\\Teachers";// Makes The folder
+    ClassInfoFile(TeacherName, ClassName, ClassName, startdate, Enddate, path);
+    Timetable();         // Makes The file
 }
 char Gen;// The students Gender.
 string gender()
