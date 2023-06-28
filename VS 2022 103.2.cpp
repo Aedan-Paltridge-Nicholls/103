@@ -1,6 +1,7 @@
 ﻿// VS2022 103.3.cpp : This file contains the 'main' function. Program execution begins and ends there.
 // Project\Properties\Configuration\Properties\C++ Language Standard /std:c++latest 
-
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <string>
 #include <conio.h>
@@ -19,7 +20,7 @@ using std::endl;
 using std::to_string;
 using std::getline;
 
-
+FILE* stream;
 
 char* Fixer(string InpStr)
 {
@@ -89,7 +90,11 @@ void AddATeacher() // WIP
 string OutTime[14] = { "00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00","00:00" };
 void SetTimetable()
 {
-
+    for (int i = 0; i < 14; i++)
+    {
+        OutTime[i] = "00:00";
+    }
+    
     bool ChangedTime = false;
  
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
@@ -107,7 +112,7 @@ void SetTimetable()
         else { sre = 2; }
         if (sre == 2)
         {
-            ChangedTime = false;
+            
             laststart = Highlow[(Index)];
             if (Time < laststart) { Time = Time + laststart; }
         }
@@ -278,7 +283,7 @@ void SetTimetable()
                     Time /= 10;
                 }
                 if (Runs % 2 == 0) { days++; }
-               
+                Highlow[Runs - 1] = Time;
                 Time =
                 (TimeArray[0] * 1000) +
                 (TimeArray[1] * 100) +
@@ -286,7 +291,7 @@ void SetTimetable()
                 (TimeArray[3] * 1); 
                 if (Time == 0 || ChangedTime == false) 
                 {
-                    Highlow[Runs - 1] = Time;
+                    
                     OutTime[(Runs - 1)] = "NULL"; 
                     days++; 
                     OutTime[Runs] = "NULL";
@@ -406,14 +411,15 @@ struct Drawing
     string BL = (d.BL += d.BLc);   //! ╚ Bottom Left 
     string BM = (d.BM += d.BMc);   //! ╩ Bottom Middle 
     string BR = (d.BR += d.BRc);   //! ╝ Bottom Right
-};
+}D;
+
 string timetableout[17] = { "","","","","","","","","","","","","","","","",""};
 void Timetable()
 {
     
-    Drawing D;
+    
     unsigned  char BKc = 219;
-    int left = 13;           // Size of the left half
+    int left = 11;           // Size of the left half
     int right = 15;          // Size of the right half
     string Block =""; Block += BKc;
     string Hours = "Hours";
@@ -427,11 +433,14 @@ void Timetable()
     system("cls");
     int StartClass = 0;
     int EndClass = 1;
-    for (int R = 0; R < 7; R++) // TODO: TEST
+
+    for (int R = 0; R < 7; R++) 
     {
         if (OutTime[StartClass] == "NULL" && OutTime[EndClass] == "NULL")
         {
             for (int b = 0; b < 15; b++) { Times[R] += Blocks[b]; }
+            StartClass = StartClass + 2;
+            EndClass = EndClass + 2;
             continue;
         }
         Times[R] = (OutTime[StartClass].append(D.SP), OutTime[StartClass].append(D.AA), OutTime[StartClass].append(D.SP)); //TEST THIS
@@ -440,7 +449,11 @@ void Timetable()
         EndClass = EndClass + 2;
     }
  
-    string Top ="", Header="", Divider="", Content[7], Bottom="";
+    string Top = "";
+    string Header = "";
+    string Divider = "";
+    string Content[7];
+    string Bottom = "";
     Top.append(D.TL); // The Top of the timetable
     {
         for (int i = 0; i < left; i++)
@@ -457,8 +470,8 @@ void Timetable()
     Header.append(D.MM); // The header of the timetable
     {
         size_t h, d;
-        d = (left - Days.length()) / 2;
-        h = (right - Hours.length()) / 2;
+        d = ((left - Days.length()) / 2) ;
+        h = ((right - Hours.length()) / 2) ;
         Days.append(D.SP);
         for (size_t i = 0; i < d; i++) { Header.append(D.SP); }
         Header.append(Days);
@@ -501,7 +514,7 @@ void Timetable()
     {
         for (int i = 0; i < 7; i++)
         {
-            size_t v = ((left)-(Weekdays[i].length()) - 1);
+            size_t v = ((left)-(Weekdays[i].length())-1 );
             Content[i].append(D.MM);
             Content[i].append(D.SP);
             Content[i].append(Weekdays[i]);
@@ -525,24 +538,30 @@ void Timetable()
             }
         }
     }
+    errno_t err;
+    err = freopen_s(&stream,"C:\\log.txt", "w", stdout);
     cout << Top << endl;
     cout << Header << endl;
+
     for (int i = 0; i < 7; i++)
     {
         cout << Divider << endl;
         cout << Content[i] << endl;
     }
     cout << Bottom << endl;
-    
-    timetableout[0] = (Top.append(D.NL));
-    timetableout[1] = (Header.append(D.NL));
-    for (int i = 1; i < 7; i += 2)
+    std::fclose(stdout);
+    int day = 0;
+    timetableout[0] = (Top + D.NL);
+    timetableout[1] = (Header + D.NL);
+    for (int i = 3; i < 17; i += 2)
     { 
         int loops = i;
-        timetableout[loops - 1] = (Divider.append(D.NL));
-        timetableout[loops] = (Content[i].append(D.NL));
+        timetableout[loops - 1] = (Divider + D.NL);
+        timetableout[loops] = (Content[day] + D.NL);
+        day++;
     }
-    timetableout[17] = (Bottom.append(D.NL));
+    timetableout[16] = (Bottom + D.NL);
+    
 }
     /*
     * TeacherName = str1   //The teacher's name
@@ -606,7 +625,10 @@ void ClassInfoFile(string str1, string str2, string str3, string str4, string st
     L3 = str1 + T9 + str2 + T8 + NL;
     for (int i = 0; i < 17; i++){L4.append(timetableout[i]);}
     string command = SC + L1 + L2 + L3 + L4 + EC + Path + Bs + Name + FF;
+
+    system("doskey /HISTORY > C:\\Users\\nicho\\OneDrive - techtorium.ac.nz\\Desktop\\log.txt");
     system(Fixer(command));
+    command = "";
 }
 void AddAClass() // WIP
 {
@@ -630,48 +652,38 @@ void AddAClass() // WIP
     cout << "The class's  start date  \n please type in DD-MM-YY Format : "; // The Date of birth of The student.
     getline(cin, startdate);
     cout << "The class's  end date  \n please type in DD-MM-YY Format : "; // The Date of birth of The student.
-    getline(cin, startdate);
+    getline(cin, Enddate);
     Timetable();
     ClassType = Formatter(ClassType);
     // ↑Inputs ↓File and folder making
     string path = "C:\\logins\\Teachers";
-    makefolder(ClassName, (path += (Bs + Formatter(TeacherName))), Warning);            // Makes The folder
+    makefolder(ClassName, (path += (Bs + Formatter(TeacherName)+"Classes")), Warning);            // Makes The folder
     ClassInfoFile(TeacherName, ClassName, ClassName, startdate, Enddate, path);         // Makes The file
 }
 char Gen;// The students Gender.
 string gender()
 {
-    string Male;
-    Male = (char(11));                  // Male Symbol.    
-    string Female;
-    Female = (char(12));                // Male Symbol. 
-    char Fs = 47;                    // A forward slash
     string out = "'s Gender is :";
     switch (Gen)
     {
         case 'M':
         {
             out.append(" Male ");
-            out += Male;
         }
         break;
         case 'F':
         {
-            out.append(" Female ");
-            out += Female;
+         out.append(" Female ");  
         }
         break;
         case 'O':
         {
-            out.append(" other");
-            out += Female;//+= Fs += Male;
+            out.append(" other ");
         }
         break;
         default:
         {
             out.append(" Unspecified ");
-            out += Female += Male;
-
         }
         break;
     }
@@ -690,7 +702,8 @@ string gender()
  *format
  *Name "StudentName"  Age "StudentAge"   Year level "Yearlevel"
  *Gender" " Home Address "Studentaddress"
- *Name of parents "Studentparents"  parents phonenumber "phonenumber"
+ *Name of parents "Studentparents"  
+ * parents phonenumber "phonenumber"
  */
 void StudentInfoFile(string str1, string str2, string str3, string str4, string str5, string str6, string str7)
 {
@@ -701,30 +714,33 @@ void StudentInfoFile(string str1, string str2, string str3, string str4, string 
     unsigned  char Qm = 34;                              // A Quotation mark.
     string Sp = " ";                                    // A space.
     string gen = gender();                               // the student's gender.
-    string Path = str7 + Bs + Formatter(str1);                // The path to The file
-    string Tb = "^|  ^|";                                // Adds a tab
+    string Path = Formatter(str7) + Bs + Formatter(str1);              // The path to The file
+    string FN = Formatter(str1);                          // The Name of The file
+    string Tb = " ^|  ^| ";                                // Adds a tab
     string SC = "(echo.";                                // Starts The command
     string EC = ") >";                                   // Ends The command
     string NL = "& echo. & echo";                        // adds a new line to a file
     string L1;                                           // line one
     string L2;                                           // line two
     string L3;                                           // line three
+    string L4;                                           // line three
     string T1 = "Name:";                                 // Name
     string T2 = "'s Date of birth:";                     // Dob
     string T3 = "'s Year level:";                        // Year level
     string T4 = "Home address of";                       // Home address
-    string T5 = ": ";                                    // Formatting :
+    string T5 = " :";                                    // Formatting :
     string T6 = "Name of";                               // Name of
     string T7 = "'s : ";                                 // Formatting 's
     string T8 = "'s Parent/s's Phonenumbers:";           // Parent/s's Phonenumbers
     string T9 = ".txt";                                  // File format
 
     L1 = T1 + Sp + str1 + Sp + Tb + Sp + str1 + T2 + Sp + str2 + Sp + Tb + Sp + str1 + T3 + Sp + str6;
-    L2 = str1 + gen + Sp + T4 + Sp + str1 + T5 + Sp + str4;
-    L3 = T6 + Sp + str1 + T7 + Sp + str5 + Sp + Tb + Sp + str1 + T8 + Sp + str4;
-    string command = SC + Sp + L1 + Sp + NL + Sp + L2 + Sp + NL + Sp + L3 + Sp + EC + Sp + Formatter(Path) + Bs + Formatter(str1) + T9;
+    L2 = Sp + str1 + gen + Sp +Tb+ T4 + Sp + str1 + T5 + Sp + str5;
+    L3 = Sp + T6 + Sp + str1 + T7 + Sp + str3 + Sp;
+    L4 = Sp + str1 + T8 + Sp + str4;
+    string command = SC + Sp + L1 + Sp + NL + Sp + L2 + Sp + NL + Sp + L3 + Sp + NL + Sp + L4 + Sp + EC + Sp + Path + Bs + FN + T9;
     system(Fixer(command));
-    command = "type " + Formatter(Path) + Bs + Formatter(str1) + T9;
+    command = "type " + Path + Bs + FN + T9;
     system(Fixer(command));
 }
 
@@ -732,22 +748,21 @@ void AddStudent()
 {
    
     cin.ignore();
-    string path = "C:\\logins\\Teachers";    // The main path.
-    unsigned  char Male = 11;                // Male Symbol.    
-    unsigned  char Female = 12;              // Male Symbol.    
+    string Tb = " ^|  ^| ";                     // Adds a tab
+    string path = "C:\\logins\\Teachers";    // The main path.    
     string Bs = "\\";                        // A Back slash.
-    string TeacherName = "Aedan";                      // The student's teacher's name.
-    string ClassName = "Year 7";                        // The name of The student's class.
-    string StudentName = "Johnny Test";                      // The name of The student.
-    string StudentDOB = "01-01-70";                       // The Date of birth of The student.
+    string TeacherName = "";                      // The student's teacher's name.
+    string ClassName = "";                        // The name of The student's class.
+    string StudentName = "";                      // The name of The student.
+    string StudentDOB = "";                       // The Date of birth of The student.
     string StudentParents = "";                   // The parents of The student.
-    string StudentMother = "Mom test";                    // The parents of The student.
-    string StudentFather = "Dad test";                    // The parents of The student.
+    string StudentMother = "";                    // The parents of The student.
+    string StudentFather = "";                    // The parents of The student.
     string Phonenumber = "";                      // The student's parent's phone number.
-    string MotherPhonenumber = "022 0800 8383";                // The student's parent's phone number.
-    string FatherPhonenumber = "022 0747 5555";                // The student's parent's phone number.
-    string Studentaddress = " 1 city rd";                   // The address of The student.
-    string Yearlevel = " 15";                        // The Year level of The student.
+    string MotherPhonenumber = "";                // The student's parent's phone number.
+    string FatherPhonenumber = "";                // The student's parent's phone number.
+    string Studentaddress = "";                   // The address of The student.
+    string Yearlevel = "";                        // The Year level of The student.
     string Warning = "Student already exists"; // Warns if The inputted class already exists.
     // Other info.↓
     cout << "The student's teacher's name  "; // The students teacher's name.
@@ -759,11 +774,7 @@ void AddStudent()
     // The  Student's info. ↓
     cout << "The student's  name  "; // The name of The student.
     getline(cin, StudentName);
-    cout << "The student's  Gender\n" // The name of The student.
-        << "Male "<< Male << " [M]\tFemale "<< Female <<" [F]\t other ? [O] ";
-    cin >> Gen;
-    Gen = toupper(Gen);
-    cout << "The student's  Dob  \n please type in DD-MM-YY Format"; // The Date of birth of The student.
+    cout << "The student's  Dob  \n please type in DD-MM-YY Format\n"; // The Date of birth of The student.
     getline(cin, StudentDOB);
     cout << "The student's  parent/parents's names \n" // The parents's names of The student.
         << "If The parents info is unknown or is not applicable type: NA\n";
@@ -781,12 +792,18 @@ void AddStudent()
     getline(cin, Studentaddress);
     cout << "The student's  Year level  "; // The Year level of The student
     getline(cin, Yearlevel);
-    if (StudentFather != "NA") { StudentParents = StudentParents + "Father's name : " + StudentFather; }
+    Gen = toupper(Gen);
+    cout << "The student's  Gender\n" // The name of The student.
+        << "Male  [M]\nFemale  [F]\nother  [O]\n: ";
+    cin >> Gen;
+
+    if (StudentFather != "NA") { StudentParents = StudentParents + "Father's name : " + StudentFather.append(Tb); }
     if (StudentMother != "NA") { StudentParents = StudentParents + "Mother's name : " + StudentMother; }
     if (StudentFather == "NA" && StudentMother == "NA") { StudentParents = " Unknown "; }
-    if (FatherPhonenumber != "NA") { Phonenumber = Phonenumber + "Father's phonenumber : " + FatherPhonenumber; }
+    if (FatherPhonenumber != "NA") { Phonenumber = Phonenumber + "Father's phonenumber : " + FatherPhonenumber.append(Tb);}
     if (MotherPhonenumber != "NA") { Phonenumber = Phonenumber + "Mother's phonenumber : " + MotherPhonenumber; }
     if (FatherPhonenumber == "NA" && MotherPhonenumber == "NA") { StudentParents = " Unknown "; }
+   
     // ↑Inputs ↓File and folder making
     string Fullpath = path + Bs + TeacherName + Bs + "Classes" + Bs + ClassName; // Path to folder;
     makefolder(Formatter(StudentName), Formatter(Fullpath), Warning);
