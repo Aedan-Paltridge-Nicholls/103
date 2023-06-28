@@ -1,9 +1,8 @@
 ﻿// VS2022 103.3.cpp : This file contains the 'main' function. Program execution begins and ends there.
 // Project\Properties\Configuration\Properties\C++ Language Standard /std:c++latest 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <string>
+#include <fstream>
 #include <conio.h>
 #include <cstring>
 #include <iostream>
@@ -508,6 +507,7 @@ void Timetable()
         {
             Bottom.append(D.LM);
         }
+
         Bottom.append(D.BR);
     }
     // The content of the timetable
@@ -538,30 +538,132 @@ void Timetable()
             }
         }
     }
-    errno_t err;
-    err = freopen_s(&stream,"C:\\log.txt", "w", stdout);
-    cout << Top << endl;
-    cout << Header << endl;
+  
+        cout << Top << endl;
+        cout << Header << endl;
+         for (int i = 0; i < 7; i++)
+         {
+             cout << Divider << endl;
+             cout << Content[i] << endl;     
+         }
+         cout << Bottom << endl;
+   
+        int day = 0;
 
-    for (int i = 0; i < 7; i++)
-    {
-        cout << Divider << endl;
-        cout << Content[i] << endl;
-    }
-    cout << Bottom << endl;
-    std::fclose(stdout);
-    int day = 0;
-    timetableout[0] = (Top + D.NL);
-    timetableout[1] = (Header + D.NL);
+        void convert(string);
+    convert(Top);
+    convert(Header);
     for (int i = 3; i < 17; i += 2)
     { 
         int loops = i;
-        timetableout[loops - 1] = (Divider + D.NL);
-        timetableout[loops] = (Content[day] + D.NL);
+        convert(Divider);
+        convert(Content[day]);
         day++;
     }
-    timetableout[16] = (Bottom + D.NL);
+    convert(Bottom);
     
+}
+void convert(string in)
+{
+        std::u8string  output;
+        output = u8"";
+    char* working = new char[in.length() + 1];
+    for (int i = 0; i < in.length(); i++)
+    { 
+        working[i] = in[i];
+    } 
+    working[in.size()] = '\0';
+    for (int i = 0; i < in.length(); i++)
+    {
+         
+        
+
+        switch (working[i])
+        {
+          case 'É'://! ╔ Top Left 
+          {
+              output += u8"╔";
+          }
+          break;
+          case 'Í'://! ═ Line Middle 
+          {
+              output += u8"═";
+          }
+          break;
+          case 'Ë'://! ╦ Top Middle 
+          {
+              output += u8"╦";
+          }
+          break;
+          case '»'://! ╗ Top Right 
+          {
+              output += u8"╗";
+          }
+          break;
+          case 'º'://! ║ Middle Middle
+          {
+              output += u8"║";
+          }
+          break;
+          case 'Ì'://! ╠ Line Left 
+          {
+              output += u8"╠";
+          }
+          break;
+          case 'Î'://! ╬ Line Center 
+          {
+              output += u8"╬";
+          }
+          break;
+          case '¹'://! ╣ Line Right 
+          {
+              output += u8"╣";
+          }
+          break;
+          case 'Û'://! █ Block
+          {
+              output += u8"█";
+          }
+          break;
+          case 'È'://! ╚ Bottom Left 
+          {
+              output += u8"╚";
+          }break;
+          case 'Ê'://! ╩ Bottom Middle 
+          {
+              output += u8"╩";
+          }
+          break;
+          case '¼': //! ╝ Bottom Right
+          {
+              output += u8"╝";
+          }
+          break;
+          case '¯': //! » Two arrows
+          {
+              output += u8"»";
+          }
+          break;
+          case ' '://! " " Space
+          {
+              output += u8" ";
+          }
+          break;
+          default:
+          {
+              output += working[i];
+          }
+              break;
+        }
+        
+        
+    }
+        std::u8string u8str = output;
+        u8str += u8"0a";
+        std::ofstream out("output.txt", std::ios_base::app);
+        out << std::string_view(reinterpret_cast<const char*>(u8str.data()), u8str.size());
+        out.close();
+    delete[] working;
 }
     /*
     * TeacherName = str1   //The teacher's name
@@ -663,6 +765,7 @@ void AddAClass() // WIP
 char Gen;// The students Gender.
 string gender()
 {
+
     string out = "'s Gender is :";
     switch (Gen)
     {
@@ -809,11 +912,12 @@ void AddStudent()
     makefolder(Formatter(StudentName), Formatter(Fullpath), Warning);
     StudentInfoFile(StudentName, StudentDOB, StudentParents, Phonenumber, Studentaddress, Yearlevel, Fullpath);
 }
-
+char input =' ';
 void interface()
+
 {
     cout << "What do you want to do\nAdd A Class\t[C]\nAdd a Student\t[S]\nAdd a teacher\t[T]\nExit\t\t[E]\n";
-    char input;
+    
     cin >> input;
     switch (toupper(input))
     {
