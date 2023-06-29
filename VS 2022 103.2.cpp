@@ -48,6 +48,7 @@ string Formatter(string input) // Formats strings to replace spaces with undersc
 }
 void startup() // Checks if The files for The program exist and if not creates them.
 {
+   
     system("if not exist C:\\logins\\Teachers mkdir C:\\logins\\Teachers");
     system("tree /F  C:\\logins");
 }
@@ -74,7 +75,7 @@ void makefolder(string input, string directory, string warning) // Make folder i
     string out = Ck + directory + Bs + input += Sp + Ob + C1 + directory + Bs + input + Cb + C2 + Ob + C3 += Qm + warning += Qm + Cb;
     system(Fixer(out));
 }
-void AddATeacher() // WIP
+void AddATeacher() 
 {
     cin.ignore();
     string path = "C:\\logins\\Teachers";            // Path to folder;
@@ -421,14 +422,14 @@ void Timetable()
     unsigned  char BKc = 219;
     int left = 11;           // Size of the left half
     int right = 15;          // Size of the right half
-    string Block =""; Block += BKc;
+    //string Block =""; Block += BKc;
     string Hours = "Hours";
     string Days = "Days";
     string Weekdays[7] = { "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
     string InTimes[7] = { "","","","","","","" };
     string Times[7] = { "","","","","","","" };
-    cout << Block;
-    string Blocks[15] = { Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block,Block, };
+   // cout << Block;
+    string Blocks[15] = { D.BK,D.BK,D.BK,D.BK,D.BK,D.BK,D.BK,D.BK,D.BK,D.BK,D.BK,D.BK,D.BK,D.BK,D.BK, };
     SetTimetable();
     system("cls");
     int StartClass = 0;
@@ -523,7 +524,7 @@ void Timetable()
             {
                 Content[i].append(D.SP);
             }
-            if (Times[i].find(Block) != string::npos )
+            if (Times[i].find(D.BK) != string::npos )
             {
                 Content[i].append(D.MM);
                 Content[i].append(Times[i]);
@@ -551,21 +552,22 @@ void Timetable()
    
         int day = 0;
 
-        void convert(string,string);
+        void convert(string);
         string path = "C:\\logins\\Teachers";
-    convert(Top, path);
-    convert(Header, path);
+    convert(Top);
+    convert(Header);
     for (int i = 3; i < 17; i += 2)
     { 
         int loops = i;
-        convert(Divider, path);
-        convert(Content[day], path);
+        convert(Divider);
+        convert(Content[day]);
         day++;
     }
-    convert(Bottom, path);
-    
+    convert(Bottom);
+    string endinfofile = "*";
+    convert(endinfofile);
 }
-void convert(string in,string filepath)
+void convert(string in)
 {
         std::u8string  output;
         output = u8"";
@@ -577,9 +579,7 @@ void convert(string in,string filepath)
     working[in.size()] = '\0';
     for (int i = 0; i < in.length(); i++)
     {
-         
-        
-
+   
         switch (working[i])
         {
           case 'É'://! ╔ Top Left 
@@ -651,20 +651,21 @@ void convert(string in,string filepath)
               output += u8" ";
           }
           break;
+          case '*'://! * Asterisk this is for ending the info file
+          {
+              output = u8"\n Students in this class : \n";
+          }
+          break;
           default:
           {
               output += working[i];
           }
-              break;
+          break;
         }
-        
-        
     }
         std::u8string u8str = output;
         u8str += u8"\n";
-
-
-        std::ofstream out(outclasspath, std::ios_base::app);// todo: needs fixed 
+        std::ofstream out(outclasspath, std::ios_base::app);
         out << std::string_view(reinterpret_cast<const char*>(u8str.data()), u8str.size());
         out.close();
     delete[] working;
@@ -701,44 +702,40 @@ void convert(string in,string filepath)
     */
 void ClassInfoFile(string str1, string str2, string str3, string str4, string str5, string str6 )
 {   
-    string Bs = "\\";                                                        // A Back slash
-    unsigned  char Ob = 40;                                              // A Open bracket.
-    unsigned  char Cb = 41;                                              // A Closed bracket.
-    unsigned  char Qm = 34;                                              // A Quotation mark.
-    string NL = " & echo. & echo ";                                                   // "& echo. & echo"
+    string Bs = "\\";// A Back slash
+    string Path = str6 + Bs + Formatter(str1) + Bs + "Classes" + Bs + Formatter(str2);// The path to The file                                                  
+    outclasspath = Path + Bs + Formatter(str2) + "-info.txt";                             //  and its name.
+    string NL = " & echo. & echo: ";                                                   // "& echo. & echo"
     string Sp = " ";                                                                  // A space.
-    string Path = str6 + Bs + Formatter(str1) + Bs + "Classes" + Bs + Formatter(str2);// The path to The file
-    outclasspath = Path + "\\info.txt";
-    string Name = Formatter(str1) + "_" + Formatter(str2) + "\\info.txt";               // The Name of The file
     string Tb = " ^|  ^| ";                                              // Adds a tab
     string SC = "(echo.";                                                // Starts The command
-    string EC = ") >";                                                   // Ends The command
+    string EC = ") > ";                                                  // Ends The command
     string L1;                                                           // line one
     string L2;                                                           // line two
     string L3;                                                           // line three
-    string T1 = " Teacher's Name : ";                                    // TeacherName
+    string T1 = "  Teacher's Name : ";                                   // TeacherName
     string T2 = " Start date : ";                                        // Start date
     string T3 = " End date  : ";                                         // End date
-    string T4 = "'s class Type :";                                       // class Type
+    string T4 = "'s class Type : ";                                       // class Type
     string T5 = "'s class :  ";                                          // Formatting 
-    string T6 = "Name of";                                               // Name of
+    string T6 = " Name of ";                                               // Name of
     string T7 = " :";                                                    // Formatting :
     string T8 = "'s Time table :";                                       // Time table
-    string T9 = " 's ";                                                  // Formatting 's
+    string T9 = "'s ";                                                  // Formatting 's
     string FF = ".txt";                                                  // File format
     L1 = T1 + str1 + Tb + T2 + str4 + Tb + T3 + str5 + NL;
     L2 = T6 + str1 + T5 + str2 + Tb + str2 + T4 + str3 + NL;
-    L3 = str1 + T9 + str2 + T8 + NL;
+    L3 = Sp + str1 + T9 + str2 + T8 + NL;
  
-    string command = SC + L1 + L2 + L3 + EC + Path + Bs + Name + FF;
+    string command = SC + L1 + L2 + L3 + EC + outclasspath;
     system(Fixer(command));
     command = "";
 }
-void AddAClass() // WIP
+void AddAClass() 
 {
    
     cin.ignore();
-    char Bs = 92;                            // A Back slash
+    string Bs = "\\";                            // A Back slash
     string TeacherName;                      // The teacher's name
     string ClassName;                        // The new class's name
     string ClassType;                        // The new class's Type ie Maths, English, History, ect.
@@ -761,9 +758,9 @@ void AddAClass() // WIP
     ClassType = Formatter(ClassType);
     // ↑Inputs ↓File and folder making
     string path = "C:\\logins\\Teachers";
-    makefolder(ClassName, (path += (Bs + Formatter(TeacherName)+"Classes")), Warning); 
+    makefolder(ClassName, (path += (Bs + Formatter(TeacherName)+ Bs +"Classes")), Warning);
     path = "C:\\logins\\Teachers";// Makes The folder
-    ClassInfoFile(TeacherName, ClassName, ClassName, startdate, Enddate, path);
+    ClassInfoFile(TeacherName, ClassName, ClassType, startdate, Enddate, path);
     Timetable();         // Makes The file
 }
 char Gen;// The students Gender.
@@ -797,6 +794,21 @@ string gender()
     Gen = ' ';
     return out;
 }
+/* This ↓ is the format that will be written to the file.
+
+ * string StudentName      =   str1                       // The name of The student
+ * string StudentDOB       =   str2                       // The Date of birth of The student 
+ * string gen              =   str3                       // the student's gender.
+ * string TeacherName      =   str4;                      // The student's teacher's name.
+ * string ClassName        =   str5;                      // The name of The student's class.
+ * ╔═════════════════╦════════╦══════════╗
+ * ║      Name       ║ Gender ║    DOB   ║    
+ * ╠═════════════════╬════════╬══════════╣
+ * ║ Student Name    ║  Male  ║ 17-01-04 ║
+ * ╠═════════════════╬════════╬══════════╣
+ * 
+ * 
+ */
 /*This ↓ is the format that will be written to the file.
  *string StudentName      =   str1                 // The name of The student
  *string StudentDOB       =   str2                 // The Date of birth of The student
@@ -899,11 +911,10 @@ void AddStudent()
     getline(cin, Studentaddress);
     cout << "The student's  Year level  "; // The Year level of The student
     getline(cin, Yearlevel);
-    Gen = toupper(Gen);
     cout << "The student's  Gender\n" // The name of The student.
         << "Male  [M]\nFemale  [F]\nother  [O]\n: ";
     cin >> Gen;
-
+    Gen = toupper(Gen);
     if (StudentFather != "NA") { StudentParents = StudentParents + "Father's name : " + StudentFather.append(Tb); }
     if (StudentMother != "NA") { StudentParents = StudentParents + "Mother's name : " + StudentMother; }
     if (StudentFather == "NA" && StudentMother == "NA") { StudentParents = " Unknown "; }
@@ -911,7 +922,8 @@ void AddStudent()
     if (MotherPhonenumber != "NA") { Phonenumber = Phonenumber + "Mother's phonenumber : " + MotherPhonenumber; }
     if (FatherPhonenumber == "NA" && MotherPhonenumber == "NA") { StudentParents = " Unknown "; }
    
-    // ↑Inputs ↓File and folder making
+    // ↑Inputs ↓ File and folder making
+
     string Fullpath = path + Bs + TeacherName + Bs + "Classes" + Bs + ClassName; // Path to folder;
     makefolder(Formatter(StudentName), Formatter(Fullpath), Warning);
     StudentInfoFile(StudentName, StudentDOB, StudentParents, Phonenumber, Studentaddress, Yearlevel, Fullpath);
